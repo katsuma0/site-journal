@@ -36,6 +36,7 @@ and run `node --check` on it.
 - Fractions, never percentages, in all UI ("3/652 sites", not "0%").
 - No `:hover` styles (they stick on touch). Press feedback via `:active` scale only.
 - Text on accent-coloured backgrounds uses `var(--paper)`, never `#fff` (dark themes have light accents).
+- **Spacing system** (use these, never ad-hoc pixel values): gaps come in exactly three sizes via tokens `--gap-s` (6px, micro), `--gap-m` (10px, standard: list rhythm, element gaps), `--gap-l` (12px, large clusters). Card interiors use `--pad-card` (14px 16px); sheet rows, inputs, and list rows use `--pad-row` (12px 14px). Stacked cards/rows separate with `margin-bottom:var(--gap-m)`; sections separate with 20-22px. Pills are 8px 13px, small chips 7px 12px, primary buttons 10px 14px. Radii: `--r` (16px, cards/sheets) and `--r-sm` (12px, inner rows).
 
 ## App behaviours to preserve
 - Home = alphabetical park list; search bar matches parks / campgrounds / "Hemlock 112" / trails.
