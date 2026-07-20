@@ -73,3 +73,4 @@ Katsuma's full top-30 list is COMPLETE as of v56, plus a second batch of the nex
 - Planned wrapper: Capacitor project with webDir "www" containing index.html, parks-data.json, manifest.json, icons (service worker unnecessary inside the app shell).
 - Version tag: .ver pill next to the Site Journal h1 shows "v0.NNN beta"; bump NNN in lockstep with the scout-vNNN cache name every release.
 - About Site Journal has Motivation and Versions sections (.fld labels). Add a .verline entry ONLY for significant feature releases, not data batches. Per-park reset: wipeParkData(pid) clears state buckets + photos by pid# prefix and unpins.
+- Easter egg: park id queenelizabethii is hidden (parkVisible gate on home, region counts, search) until a search containing "queen elizabeth" fires revealEgg() (state.eggQE2). Never list it in the Versions changelog.

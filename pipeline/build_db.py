@@ -732,6 +732,11 @@ PARKS = {
     blurb="A spring whitewater run from the Ishpatina highlands down to Elk Lake, threading old burns and esker country. Backcountry permits only.",
     fishing="Makobe River: brook trout, walleye", fmz="FMZ 11",
     facilities=[F["backcountry"],F["boat"]]),
+  "queenelizabethii": dict(sort=1200, name="Queen Elizabeth II Wildlands", region="Central Park · Head Lake", backcountry=True,
+    url="https://www.ontarioparks.ca/park/queenelizabethiiwildlands",
+    blurb="Ontario's best kept secret: 33,000 hectares of crown wilderness with no gates, no fees, and no facilities, hiding in plain sight south of Algonquin. Not reservable, not operating, not on the map. Yet here you are.",
+    fishing="Dozens of unnamed lakes: bass, pike, the occasional rumour of trout", fmz="FMZ 15",
+    facilities=[F["backcountry"],F["trails"]]),
 }
 
 # (park, name, sub, sort, range_or_labels)
@@ -1210,6 +1215,7 @@ TRAILS = [
   ("pigeonriver","Finger Point Trail",3.4,"Moderate","Climb to a lookout over Lake Superior",2),
   ("potholes","Potholes Trail",0.5,"Easy","Short walk to the glacial potholes on the Kinniwabi",1),
   ("johnepearce","Spicebush Trail",1.5,"Easy","Carolinian loop above the Erie bluffs",1),
+  ("queenelizabethii","Ganaraska Trail, Wilderness Section",32.0,"Difficult","Unmarked crown wilderness crossing for experienced navigators only",1),
 ]
 
 def labels_for(spec):
