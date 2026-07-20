@@ -21,7 +21,7 @@
     --paper:#F1F6F1; --card:#FFFFFF; --ink:#0F1F17; --forest:#00753A; --forest-2:#18A05A; --forest-press:#005C2C;
     --green-tint:#E7F3EB; --green-tint-2:#D6EBDC;
     --moss:#40564B; --mist:#E4EDE4; --mist-2:#C7D7C9; --line:#D3E0D4; --amber:#E0A22B; --amber-soft:#FBEEDC;
-    --r:16px; --r-sm:12px; --r-xs:8px; --gap-s:6px; --gap-m:10px; --gap-l:12px; --pad-card:14px 16px; --pad-row:12px 14px;     --shadow-sm:0 1px 2px rgba(15,31,23,.06); --shadow:0 2px 12px rgba(15,31,23,.08); --shadow-btn:0 3px 10px rgba(0,117,58,.30);
+    --r:16px; --r-sm:12px; --r-xs:8px; --row-h:64px; --gap-s:6px; --gap-m:10px; --gap-l:12px; --pad-card:14px 16px; --pad-row:12px 14px;     --shadow-sm:0 1px 2px rgba(15,31,23,.06); --shadow:0 2px 12px rgba(15,31,23,.08); --shadow-btn:0 3px 10px rgba(0,117,58,.30);
   }
   html{transition:none}
   body,.card,.sheet,.backbar,.swatch{transition:background-color .25s ease,color .25s ease,border-color .25s ease}
@@ -311,6 +311,11 @@
   .about-toggle{color:var(--ink)}
   /* section headings (Campgrounds / Trails / Top sites) in ink, not accent */
   .seclabel{color:var(--ink)}
+  /* ---- park page: one box height, contents vertically centred ---- */
+  .about-toggle,.cg-row,.trail{min-height:var(--row-h)}
+  .stat{min-height:var(--row-h);display:flex;flex-direction:column;justify-content:center}
+  .rank li{min-height:var(--row-h);padding-top:0;padding-bottom:0}
+  .want-item{min-height:var(--row-h);display:flex;flex-direction:column;justify-content:center}
 </style>
 </head>
 <body>
