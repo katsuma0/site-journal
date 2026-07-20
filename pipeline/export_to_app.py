@@ -55,6 +55,11 @@ def main():
         park["campgrounds"].sort(key=first_site_num)
         if not park["campgrounds"]:
             park["dayuse"] = True
+        try:
+            if p["backcountry"]:
+                park["backcountry"] = True
+        except (KeyError, IndexError):
+            pass
         parks.append(park)
 
     json.dump(parks, open(OUT, "w"), ensure_ascii=False, indent=2)

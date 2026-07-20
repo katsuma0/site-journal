@@ -3,7 +3,7 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE parks (
   id TEXT PRIMARY KEY, name TEXT NOT NULL, region TEXT, url TEXT,
-  blurb TEXT, fishing TEXT, fmz TEXT, sort INTEGER DEFAULT 0, facilities TEXT
+  blurb TEXT, fishing TEXT, fmz TEXT, sort INTEGER DEFAULT 0, backcountry INTEGER DEFAULT 0, facilities TEXT
 );
 CREATE TABLE campgrounds (
   id INTEGER PRIMARY KEY AUTOINCREMENT, park_id TEXT NOT NULL REFERENCES parks(id),

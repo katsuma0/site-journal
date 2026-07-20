@@ -482,6 +482,27 @@ PARKS = {
     blurb="A warm, shallow sweep of Lake Superior sand where the highway meets the bay. Picnic, swim, watch the lake. Day use only.",
     fishing="Lake Superior: trout and salmon nearby", fmz="FMZ 9 (Lake Superior)",
     facilities=[F["vault"],F["water"],F["beaches"],F["pets"]]),
+  # ---- backcountry-only parks with numbered sites ----
+  "frontenac": dict(sort=910, name="Frontenac", region="Southeast Park · Sydenham", backcountry=True,
+    url="https://www.ontarioparks.ca/park/frontenac",
+    blurb="Backcountry camping only, 20 minutes north of Kingston: 54 numbered sites in 13 clusters and 6 singles, every one reachable by both canoe and trail. 22 lakes, 100 km of loops, open all four seasons.",
+    fishing="22 lakes: lake trout, bass, pike (varies by lake)", fmz="FMZ 18",
+    facilities=[F["backcountry"],F["trails"],F["boat"],F["rentals"],F["water"],F["winter"],F["visitor"]]),
+  "kawarthahighlands": dict(sort=920, name="Kawartha Highlands", region="Central Park · Apsley", backcountry=True,
+    url="https://www.ontarioparks.ca/park/kawarthahighlands",
+    blurb="Backcountry camping only: over 100 numbered paddle-in sites across six canoe loops between cottage country and the Shield. Reserve the exact site, then earn it with a portage.",
+    fishing="300 lakes: lake trout, brook trout, walleye, bass, panfish", fmz="FMZ 15",
+    facilities=[F["backcountry"],F["boat"],F["rentals"],F["radio"]]),
+  "themassasauga": dict(sort=930, name="The Massasauga", region="Near North Park · Parry Sound", backcountry=True,
+    url="https://www.ontarioparks.ca/park/themassasauga",
+    blurb="Backcountry camping only among hundreds of windswept Georgian Bay islands from Parry Sound to the Moon River. 135 numbered water-access sites, bayside or inland lakes, in rattlesnake country.",
+    fishing="Georgian Bay and inland lakes: bass, pike, walleye, lake trout", fmz="FMZ 14 (Georgian Bay)",
+    facilities=[F["backcountry"],F["boat"],F["rentals"],F["trails"]]),
+  "frenchriver": dict(sort=940, name="French River", region="Near North Park · Alban", backcountry=True,
+    url="https://www.ontarioparks.ca/park/frenchriver",
+    blurb="Backcountry camping only along Canada's first Heritage River, 105 km from Lake Nipissing to Georgian Bay. 291 numbered sites on the shorelines, all water access, permits from the Visitor Centre.",
+    fishing="French River: walleye, pike, muskie, bass", fmz="FMZ 11",
+    facilities=[F["backcountry"],F["boat"],F["rentals"],F["trails"],F["visitor"]]),
 }
 
 # (park, name, sub, sort, range_or_labels)
@@ -684,6 +705,18 @@ CAMPGROUNDS = [
   ("eskerlakes","Esker Lakes Campground","Panagapka Lake · Over half electrical · Dog beach",1,("range",1,100)),
   ("algonquinkiosk","Kiosk","Kioshkokwi Lake · Non-electric",1,("range",1,27)),
   ("algonquinbrent","Brent","Cedar Lake · Non-electric · The old Brent store",1,("range",1,30)),
+  ("frontenac","Interior","Clusters 1-13 and singles 14-19 · Canoe or hike to every site",1,("list",['1A', '1B', '1C', '1D', '2A', '2B', '2C', '3A', '3B', '3C', '3D', '4A', '4B', '4C', '4D', '5A', '5B', '6A', '6B', '6C', '6D', '7A', '7B', '7C', '7D', '8A', '8B', '8C', '8D', '9A', '9B', '9C', '9D', '10A', '10B', '10C', '10D', '11A', '11B', '11C', '11D', '12A', '12B', '12C', '12D', '13A', '13B', '13C', '14', '15', '16', '17', '18', '19'])),
+  ("kawarthahighlands","Mississagua Lake Loop","West access · Waterfalls on the river",1,("range",101,120)),
+  ("kawarthahighlands","Bottle and Sucker","Sandy beaches · Short carries",2,("range",201,216)),
+  ("kawarthahighlands","Wolf and Crab","Granite points · One 140 m portage in",3,("range",301,318)),
+  ("kawarthahighlands","Long, Buzzard, Mountain","East access · Buzzard has nine sites",4,("range",401,435)),
+  ("kawarthahighlands","Anstruther and Rathbun","Busy put-in · Serpentine Loop start",5,("range",501,522)),
+  ("kawarthahighlands","Serpentine and Copper","Deepest in · Copper-tinted water",6,("range",601,618)),
+  ("themassasauga","Interior Lakes","Spider and Clear Lakes · From Three Legged Lake · One 370 m portage",1,("range",100,165)),
+  ("themassasauga","Bayside","Georgian Bay islands and Moon River · From Pete's Place · Food lockers",2,("range",600,668)),
+  ("frenchriver","Upper French","Lake Nipissing to Dokis · Big water",1,("range",1,64)),
+  ("frenchriver","Main Channel","Dry Pine Bay to Ox Bay · Rapids and swifts",2,("range",100,199)),
+  ("frenchriver","Lower French and Delta","To Georgian Bay · The maze of outlets",3,("range",200,326)),
 ]
 
 
@@ -868,6 +901,12 @@ TRAILS = [
   ("oxtongueriver","Ragged Falls Trail",0.8,"Easy to moderate","Up the riverside to the thundering falls",1),
   ("shorthills","Swayze Falls Trail",4.2,"Easy","Wide meadow-and-forest loop to the falls platform",1),
   ("shorthills","Terrace Creek Trail",2.4,"Moderate","Valley crossing in the heart of the hills",2),
+  ("frontenac","Arab Lake Gorge Trail",1.5,"Easy","Boardwalk through a mossy gorge by the park office",1),
+  ("frontenac","Doe Lake Trail",3.0,"Moderate","The classic intro loop past Doe Lake",2),
+  ("frontenac","Big Salmon Lake Loop",19.0,"Difficult","Full-day circuit of the big lake",3),
+  ("frontenac","Slide Lake Loop",21.0,"Difficult","The park's toughest loop, cliffs over Slide Lake",4),
+  ("themassasauga","Wreck Island Trail",1.5,"Moderate","Boat-access loop over billion year old twisted rock",1),
+  ("frenchriver","Recollet Falls Trail",2.8,"Easy to moderate","From the Visitor Centre along the gorge to the falls",1),
 ]
 
 def labels_for(spec):
@@ -881,8 +920,8 @@ def main():
     con.executescript(open("schema.sql").read())
     cur = con.cursor()
     for pid, p in PARKS.items():
-        cur.execute("INSERT INTO parks(id,name,region,url,blurb,fishing,fmz,sort,facilities) VALUES(?,?,?,?,?,?,?,?,?)",
-            (pid, p["name"], p["region"], p["url"], p["blurb"], p["fishing"], p["fmz"], p["sort"], json.dumps(p["facilities"])))
+        cur.execute("INSERT INTO parks(id,name,region,url,blurb,fishing,fmz,sort,backcountry,facilities) VALUES(?,?,?,?,?,?,?,?,?,?)",
+            (pid, p["name"], p["region"], p["url"], p["blurb"], p["fishing"], p["fmz"], p["sort"], 1 if p.get("backcountry") else 0, json.dumps(p["facilities"])))
     total = 0
     for (pid, name, sub, sort, spec) in CAMPGROUNDS:
         cur.execute("INSERT INTO campgrounds(park_id,name,sub,sort) VALUES(?,?,?,?)", (pid, name, sub, sort))
