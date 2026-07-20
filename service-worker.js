@@ -1,5 +1,5 @@
 /* Grundy Lake Site Scout — offline service worker */
-const CACHE = 'scout-v106';
+const CACHE = 'scout-v107';
 const CORE = [
   './',
   './index.html',

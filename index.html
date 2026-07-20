@@ -124,7 +124,7 @@
     padding:0 16px 16px;background:var(--card)}
   .about-body::before{content:"";display:block;border-top:1px solid var(--line);margin-bottom:2px}
   .about-body .blurb{font-size:14px;color:var(--ink);margin:12px 0 0}
-  .about-body .official{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--forest);text-decoration:none}
+  .about-body .fmz+.fmz,.fmz+a.fmz{margin-left:8px}
   .facils{display:flex;flex-wrap:wrap;gap:var(--gap-s);margin-top:14px}
   .facil{font-size:12.5px;font-weight:600;color:var(--ink);background:var(--mist);border-radius:99px;padding:7px 12px;display:inline-flex;align-items:center;gap:var(--gap-s)}
   .facil svg{color:var(--forest-2);flex:none}
@@ -332,8 +332,9 @@
   .site.marked:not(.rated){color:var(--ink)}
   .titlerow{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .titlerow h2{min-width:0}
-  .pinbtn{flex:0 0 44px;width:44px;height:44px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--card);color:var(--moss);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
-  .pinbtn.on{color:var(--forest);border-color:var(--forest)}
+  .pinbtn{flex:0 0 44px;width:44px;height:44px;border:none;background:none;color:var(--moss);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+  .pinbtn svg{width:22px;height:22px;fill:none}
+  .pinbtn.on{color:var(--forest)}
   .pinbtn.on svg{fill:currentColor}
   .pc-pinb{position:absolute;top:-11px;right:-7px;width:26px;height:26px;border-radius:50%;background:var(--forest);color:var(--paper);
     border:2px solid var(--card);display:flex;align-items:center;justify-content:center;pointer-events:none}
@@ -362,7 +363,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.106 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.107 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -659,7 +660,7 @@ function openPark(pid){
         <div class="facils">${p.facilities.map(facilChip).join('')}</div>
         <div class="fishing"><b>Fishing:</b> ${p.fishing}</div>
         ${(m=>m?`<a class="fmz" href="https://katsuma0.github.io/onfishingreg/#zone=${m[1]}" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 12c-4 4-8 4-14 0 6-4 10-4 14 0Zm0 0 3-3m-3 3 3 3"/><circle cx="8.5" cy="11.5" r=".5" fill="currentColor"/></svg>FMZ ${m[1]} - onfishingreg \u2197</a>`:`<div class="fmz"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 12c-4 4-8 4-14 0 6-4 10-4 14 0Zm0 0 3-3m-3 3 3 3"/><circle cx="8.5" cy="11.5" r=".5" fill="currentColor"/></svg>${p.fmz}</div>`)((p.fmz||'').match(/FMZ\s*(\d+)/))}
-                <a class="official" href="${p.url}" target="_blank" rel="noopener">Official park page \u2197</a>
+                <a class="fmz" href="${p.url}" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4 10 14"/><path d="M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"/></svg>Official park page \u2197</a>
       </div>
     </div>
     ${p.dayuse?'':'<div class="seclabel">Campgrounds</div>'}
