@@ -10,7 +10,7 @@ regardless of the verified flag (useful now, before anything is checked).
 Run:  python3 export_to_app.py         # verified only
       python3 export_to_app.py --all   # everything
 """
-import json, sqlite3, sys
+import json, re, sqlite3, sys
 
 DB, OUT = "scout.db", "parks-data.json"
 ONLY_VERIFIED = "--all" not in sys.argv
@@ -46,6 +46,13 @@ def main():
             sites = [r["label"] for r in rows]
             if sites:
                 park["campgrounds"].append(dict(id=c["name"], sub=cap_list(c["sub"]), sites=sites))
+        def first_site_num(cg):
+            for lbl in cg["sites"]:
+                m = re.match(r"\d+", str(lbl))
+                if m:
+                    return int(m.group())
+            return 10**9
+        park["campgrounds"].sort(key=first_site_num)
         if park["campgrounds"]:
             parks.append(park)
 
