@@ -45,6 +45,7 @@ and run `node --check` on it.
 - Parks with exactly one campground open that campground by default.
 - Site chips: number is the main element; rated = heatmap colour + score badge bottom-right; wishlist star top-left (amber); note OR photo = small star top-right; note AND photo = medallion (circle with a negative-space star, `MEDAL_SVG`). Trails use the same star/medallion system, top-right of the card.
 - Progress bars / stats stay hidden until at least one site in that park is rated.
+- Park page hierarchy: section labels (`.seclabel`, e.g. Campgrounds / Trails) are `var(--ink)`, never the accent; campground and trail names carry the accent (`var(--forest)`); the About card is a tinted notecard (paper mixed ~9% with the accent) so it never reads as a campground card.
 - Rating sheet: for sites the green context line reads "Campground · Park" (for the Algonquin split parks, where campground name == park name, it reads "Algonquin · <name>").
 
 ## Theme system (unlockables)

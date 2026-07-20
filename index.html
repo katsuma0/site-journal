@@ -306,6 +306,14 @@
   .tr-rate{font-size:13px}
   .want-btn{min-height:48px}
   .backbtn{padding:10px 0;margin:-8px 0}
+  /* ---- park page: About reads as a tinted notecard, not a campground card ---- */
+  .about-toggle{background:color-mix(in srgb, var(--forest) 9%, var(--paper));
+    border-color:color-mix(in srgb, var(--forest) 24%, var(--line));color:var(--ink)}
+  .about-body{background:color-mix(in srgb, var(--forest) 9%, var(--paper));
+    border-color:color-mix(in srgb, var(--forest) 24%, var(--line));border-top:none}
+  .about-body::before{border-top:1px solid color-mix(in srgb, var(--forest) 18%, var(--line))}
+  /* section headings (Campgrounds / Trails / Top sites) in ink, not accent */
+  .seclabel{color:var(--ink)}
 </style>
 </head>
 <body>
