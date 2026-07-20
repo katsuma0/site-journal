@@ -361,7 +361,7 @@
   <div class="ctx" id="d-ctx"></div>
   <label class="fld">Rating</label>
   <div class="dots" id="dots"></div>
-  <button class="want-btn" id="wantBtn" aria-pressed="false">☆ Want this one next time</button>
+  <button class="want-btn" id="wantBtn" aria-pressed="false">☆ Wishlist</button>
   <label class="fld" for="d-notes" id="notesLabel">Notes</label>
   <textarea id="d-notes" placeholder=""></textarea>
   <div id="photoWrap">
@@ -661,7 +661,7 @@ function openSheet(type,k,cgId,site){ cur={type,k,cg:cgId,site,trailName:(type==
   if(type==='site'){ document.getElementById('d-kind').textContent='Site'; document.getElementById('d-title').textContent='Site '+site;
     whr.textContent=(cgId===curPark.name?((curPark.region||'').split(' · ')[0]||'')+' · '+cgId:cgId+' · '+curPark.name); whr.style.display='';
     document.getElementById('d-ctx').textContent=''; wb.style.display=''; pw.style.display='';
-    const w=wantOf(k); wb.setAttribute('aria-pressed',w); wb.textContent=(w?'★ ':'☆ ')+'Want this one next time'; renderPhotos(k);
+    const w=wantOf(k); wb.setAttribute('aria-pressed',w); wb.textContent=(w?'★ ':'☆ ')+'Wishlist'; renderPhotos(k);
   } else if(type==='trail'){ const t=(curPark.trails||[]).find(x=>x.name===cgId); whr.style.display='none';
     document.getElementById('d-kind').textContent='Trail'; document.getElementById('d-title').textContent=cgId;
     document.getElementById('d-ctx').textContent=(t?fmtLen(t.length)+' · '+t.difficulty:''); wb.style.display='none'; pw.style.display=''; renderPhotos(k);
@@ -681,11 +681,11 @@ function afterChange(){ persist();
   else refreshCgHeader(cur.cg); }
 function setScore(v){ const e=ensure(); e.score=(e.score===v?null:v); buzz(9); paintDots(); flashSaved(); afterChange(); }
 document.getElementById('wantBtn').addEventListener('click',function(){ const e=ensure(); e.want=!e.want; buzz(9);
-  this.setAttribute('aria-pressed',e.want); this.textContent=(e.want?'★ ':'☆ ')+'Want this one next time'; flashSaved(); persist(); if(cur.site) refreshChip(cur.k); renderGlance(); });
+  this.setAttribute('aria-pressed',e.want); this.textContent=(e.want?'★ ':'☆ ')+'Wishlist'; flashSaved(); persist(); if(cur.site) refreshChip(cur.k); renderGlance(); });
 function autoGrowNotes(el){ el.style.height='auto'; el.style.height=Math.max(48,el.scrollHeight)+'px'; }
 document.getElementById('d-notes').addEventListener('input',e=>{ autoGrowNotes(e.target); const en=ensure(); en.note=e.target.value; flashSaved(); persist(); if(cur.site) refreshChip(cur.k); else if(cur.type==='trail') refreshTrailCard(cur.trailName); });
 document.getElementById('clearBtn').addEventListener('click',()=>{ delete state[cur.type][cur.k]; const cnta=document.getElementById('d-notes'); cnta.value=''; autoGrowNotes(cnta);
-  const wb=document.getElementById('wantBtn'); wb.setAttribute('aria-pressed',false); wb.textContent='☆ Want this one next time'; paintDots(); flashSaved(); afterChange(); });
+  const wb=document.getElementById('wantBtn'); wb.setAttribute('aria-pressed',false); wb.textContent='☆ Wishlist'; paintDots(); flashSaved(); afterChange(); });
 document.getElementById('doneBtn').addEventListener('click',closeSheet);
 backdrop.addEventListener('click',closeSheet);
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSheet(); document.getElementById('lightbox').classList.remove('on'); } });
