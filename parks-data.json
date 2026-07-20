@@ -1853,6 +1853,24 @@
     ]
   },
   {
+    "id": "batchawanabay",
+    "name": "Batchawana Bay",
+    "region": "Northern Park · Batchawana Bay",
+    "url": "https://www.ontarioparks.ca/park/batchawanabay",
+    "blurb": "A warm, shallow sweep of Lake Superior sand where the highway meets the bay. Picnic, swim, watch the lake. Day use only.",
+    "fishing": "Lake Superior: trout and salmon nearby",
+    "fmz": "FMZ 9 (Lake Superior)",
+    "facilities": [
+      "Vault toilets",
+      "Water taps",
+      "Beaches",
+      "Pet beach"
+    ],
+    "campgrounds": [],
+    "trails": [],
+    "dayuse": true
+  },
+  {
     "id": "bonecho",
     "name": "Bon Echo",
     "region": "Southeast Park · Cloyne",
@@ -2574,6 +2592,28 @@
         "detail": "Footprints in Time interpretive walk along the Little Bonnechere River"
       }
     ]
+  },
+  {
+    "id": "boynevalley",
+    "name": "Boyne Valley",
+    "region": "Central Park · Shelburne",
+    "url": "https://www.ontarioparks.ca/park/boynevalley",
+    "blurb": "Rolling headwater hills of the Boyne River, with the Murphy's Pinnacle lookout and Bruce Trail links. Day use only.",
+    "fishing": "Boyne River: brook trout",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Hiking trails"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "Primrose Loop",
+        "length": 4.5,
+        "difficulty": "Moderate",
+        "detail": "Hills and valley to the Murphy's Pinnacle lookout"
+      }
+    ],
+    "dayuse": true
   },
   {
     "id": "algonquinbrent",
@@ -4253,6 +4293,22 @@
         "detail": "A section of the 350 km Lake Ontario Waterfront Trail"
       }
     ]
+  },
+  {
+    "id": "devilsglen",
+    "name": "Devil's Glen",
+    "region": "Central Park · Glen Huron",
+    "url": "https://www.ontarioparks.ca/park/devilsglen",
+    "blurb": "A lookout over the Mad River gorge on the Niagara Escarpment; the Bruce Trail drops through the glen. Day use only.",
+    "fishing": "Mad River: brook trout",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Vault toilets",
+      "Hiking trails"
+    ],
+    "campgrounds": [],
+    "trails": [],
+    "dayuse": true
   },
   {
     "id": "driftwood",
@@ -6278,6 +6334,41 @@
         "detail": "Riverside walk under 300 year old bur oaks"
       }
     ]
+  },
+  {
+    "id": "forksofthecredit",
+    "name": "Forks of the Credit",
+    "region": "Central Park · Caledon",
+    "url": "https://www.ontarioparks.ca/park/forksofthecredit",
+    "blurb": "The Credit River splits through a gorge past the Cataract falls and old mill ruins. Kettle lakes and bare rolling hills. Day use only.",
+    "fishing": "Credit River: brook and brown trout (special regulations)",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Vault toilets",
+      "Hiking trails"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "Kettle Trail",
+        "length": 1.0,
+        "difficulty": "Easy",
+        "detail": "Around a glacial kettle lake"
+      },
+      {
+        "name": "Meadow Trail",
+        "length": 2.0,
+        "difficulty": "Easy",
+        "detail": "Open rolling hills above the gorge"
+      },
+      {
+        "name": "Trans Canada Trail",
+        "length": 2.0,
+        "difficulty": "Easy",
+        "detail": "Along the gorge to the Cataract falls and ruins"
+      }
+    ],
+    "dayuse": true
   },
   {
     "id": "grundy",
@@ -11699,6 +11790,48 @@
     ]
   },
   {
+    "id": "monocliffs",
+    "name": "Mono Cliffs",
+    "region": "Central Park · Mono",
+    "url": "https://www.ontarioparks.ca/park/monocliffs",
+    "blurb": "Crevice caves, cliff-top lookouts, and a jade-green kettle lake on the Niagara Escarpment. Bruce Trail country. Day use only.",
+    "fishing": "McCarston's Lake is protected, no angling",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Vault toilets",
+      "Hiking trails",
+      "Bike trail"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "Carriage Trail",
+        "length": 3.5,
+        "difficulty": "Easy",
+        "detail": "The old carriage road, the spine of the park"
+      },
+      {
+        "name": "Cliff-Top Side Trail",
+        "length": 1.4,
+        "difficulty": "Moderate",
+        "detail": "Metal stairways to lookouts over the crevice caves"
+      },
+      {
+        "name": "Spillway Trail",
+        "length": 2.3,
+        "difficulty": "Easy",
+        "detail": "Along a glacial spillway valley"
+      },
+      {
+        "name": "McCarston's Lake Trail",
+        "length": 2.0,
+        "difficulty": "Moderate",
+        "detail": "Loops the jade kettle lake"
+      }
+    ],
+    "dayuse": true
+  },
+  {
     "id": "murphyspoint",
     "name": "Murphys Point",
     "region": "Southeast Park · Perth",
@@ -12165,6 +12298,23 @@
     ]
   },
   {
+    "id": "northbeach",
+    "name": "North Beach",
+    "region": "Southeast Park · Consecon",
+    "url": "https://www.ontarioparks.ca/park/northbeach",
+    "blurb": "A sandy barrier beach between North Bay lagoon and Lake Ontario in Prince Edward County. Sandbanks' quiet little sibling. Day use only.",
+    "fishing": "North Bay lagoon: bass, panfish",
+    "fmz": "FMZ 20 (Lake Ontario)",
+    "facilities": [
+      "Vault toilets",
+      "Water taps",
+      "Beaches"
+    ],
+    "campgrounds": [],
+    "trails": [],
+    "dayuse": true
+  },
+  {
     "id": "oastlerlake",
     "name": "Oastler Lake",
     "region": "Near North Park · Parry Sound",
@@ -12370,6 +12520,55 @@
       }
     ],
     "trails": []
+  },
+  {
+    "id": "oxtongueriver",
+    "name": "Oxtongue River, Ragged Falls",
+    "region": "Central Park · Dwight",
+    "url": "https://www.ontarioparks.ca/park/oxtongueriverraggedfalls",
+    "blurb": "A short walk to Ragged Falls, one of cottage country's biggest cascades, as the Oxtongue pours out of Algonquin. Day use only.",
+    "fishing": "Oxtongue River: brook trout, bass",
+    "fmz": "FMZ 15",
+    "facilities": [
+      "Vault toilets",
+      "Hiking trails"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "Ragged Falls Trail",
+        "length": 0.8,
+        "difficulty": "Easy to moderate",
+        "detail": "Up the riverside to the thundering falls"
+      }
+    ],
+    "dayuse": true
+  },
+  {
+    "id": "petroglyphs",
+    "name": "Petroglyphs",
+    "region": "Central Park · Woodview",
+    "url": "https://www.ontarioparks.ca/park/petroglyphs",
+    "blurb": "The Teaching Rocks: Canada's largest concentration of Indigenous rock carvings, protected at the Learning Place. Day use only.",
+    "fishing": "McGinnis Lake is protected, no angling",
+    "fmz": "FMZ 15",
+    "facilities": [
+      "Flush toilets",
+      "Vault toilets",
+      "Water taps",
+      "Hiking trails",
+      "Visitor centre"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "Nanabush Trail",
+        "length": 5.5,
+        "difficulty": "Moderate",
+        "detail": "Forest loop past wetlands and ridges near the Teaching Rocks"
+      }
+    ],
+    "dayuse": true
   },
   {
     "id": "pinery",
@@ -17862,6 +18061,36 @@
     "trails": []
   },
   {
+    "id": "shorthills",
+    "name": "Short Hills",
+    "region": "Southwest Park · Pelham",
+    "url": "https://www.ontarioparks.ca/park/shorthills",
+    "blurb": "Niagara's carved valleys and Swayze Falls, with meadow and forest loops shared with horses and bikes. Day use only.",
+    "fishing": "Twelve Mile Creek: brook trout (catch and release)",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Vault toilets",
+      "Hiking trails",
+      "Bike trail"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "Swayze Falls Trail",
+        "length": 4.2,
+        "difficulty": "Easy",
+        "detail": "Wide meadow-and-forest loop to the falls platform"
+      },
+      {
+        "name": "Terrace Creek Trail",
+        "length": 2.4,
+        "difficulty": "Moderate",
+        "detail": "Valley crossing in the heart of the hills"
+      }
+    ],
+    "dayuse": true
+  },
+  {
     "id": "sibbaldpoint",
     "name": "Sibbald Point",
     "region": "Central Park · Sutton",
@@ -19259,6 +19488,25 @@
     ]
   },
   {
+    "id": "springwater",
+    "name": "Springwater",
+    "region": "Central Park · Midhurst",
+    "url": "https://www.ontarioparks.ca/park/springwater",
+    "blurb": "Pine plantations, ponds, and picnic lawns just outside Barrie. Quiet, easy walking under tall trees. Day use only.",
+    "fishing": "No notable fishery",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Flush toilets",
+      "Vault toilets",
+      "Water taps",
+      "Hiking trails",
+      "Playground"
+    ],
+    "campgrounds": [],
+    "trails": [],
+    "dayuse": true
+  },
+  {
     "id": "sturgeonbay",
     "name": "Sturgeon Bay",
     "region": "Near North Park · Pointe au Baril",
@@ -20243,6 +20491,36 @@
         "detail": "Short deer trail with one big hill at the start"
       }
     ]
+  },
+  {
+    "id": "wasagabeach",
+    "name": "Wasaga Beach",
+    "region": "Central Park · Wasaga Beach",
+    "url": "https://www.ontarioparks.ca/park/wasagabeach",
+    "blurb": "The world's longest freshwater beach, 14 km of sand on Nottawasaga Bay across eight beach areas. Day use only.",
+    "fishing": "Nottawasaga River: salmon and rainbow runs, bass",
+    "fmz": "FMZ 16",
+    "facilities": [
+      "Flush toilets",
+      "Vault toilets",
+      "Water taps",
+      "Beaches",
+      "Hiking trails",
+      "Bike trail",
+      "Pet beach",
+      "Visitor centre",
+      "Playground"
+    ],
+    "campgrounds": [],
+    "trails": [
+      {
+        "name": "High Dunes Trail",
+        "length": 3.0,
+        "difficulty": "Moderate",
+        "detail": "Over the wooded dunes at the Wasaga Nordic Centre"
+      }
+    ],
+    "dayuse": true
   },
   {
     "id": "wheatley",

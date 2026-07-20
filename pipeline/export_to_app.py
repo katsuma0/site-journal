@@ -53,8 +53,9 @@ def main():
                     return int(m.group())
             return 10**9
         park["campgrounds"].sort(key=first_site_num)
-        if park["campgrounds"]:
-            parks.append(park)
+        if not park["campgrounds"]:
+            park["dayuse"] = True
+        parks.append(park)
 
     json.dump(parks, open(OUT, "w"), ensure_ascii=False, indent=2)
     n = sum(len(c["sites"]) for pk in parks for c in pk["campgrounds"])
