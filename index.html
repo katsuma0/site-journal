@@ -20,7 +20,7 @@
   :root{
     --paper:#F1F6F1; --card:#FFFFFF; --ink:#0F1F17; --forest:#00753A; --forest-2:#18A05A; --forest-press:#005C2C;
     --green-tint:#E7F3EB; --green-tint-2:#D6EBDC;
-    --moss:#40564B; --mist:#E4EDE4; --mist-2:#C7D7C9; --line:#D3E0D4; --amber:#E0A22B; --amber-soft:#FBEEDC;
+    --moss:#40564B; --mist:#E4EDE4; --mist-2:#C7D7C9; --line:#D3E0D4; --amber:#EFBF25; --amber-soft:#FBEEDC;
     --r:16px; --r-sm:12px; --r-xs:8px; --row-h:64px; --gap-s:6px; --gap-m:10px; --gap-l:12px; --pad-card:14px 16px; --pad-row:12px 14px;     --shadow-sm:0 1px 2px rgba(15,31,23,.06); --shadow:0 2px 12px rgba(15,31,23,.08); --shadow-btn:0 3px 10px rgba(0,117,58,.30);
   }
   html{transition:none}
@@ -239,11 +239,12 @@
   .sheet .d-where{color:var(--forest);font-weight:700;font-size:14px;letter-spacing:-.01em;margin-top:2px}
   .sheet h3{font-weight:800;font-size:26px;margin:3px 0 2px;letter-spacing:-.01em}
   .sheet .ctx{font-size:13px;color:var(--moss);margin-bottom:20px}
-  .fld{display:block;font-size:11.5px;font-weight:800;color:var(--moss);margin:0 0 10px;text-transform:uppercase;letter-spacing:.05em}
-  .dots{display:flex;gap:var(--gap-s);margin-bottom:20px}
+  .fld{display:flex;align-items:center;gap:var(--gap-m);font-size:11.5px;font-weight:800;color:var(--moss);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.08em}
+  .fld::after{content:"";flex:1;height:1px;background:var(--line)}
+  .dots{display:flex;gap:var(--gap-s);margin-bottom:var(--gap-m)}
   .dot{flex:1;min-height:48px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--card);cursor:pointer;font-weight:700;font-size:15px;color:var(--moss);display:flex;align-items:center;justify-content:center;transition:.12s;-webkit-tap-highlight-color:transparent}
   .dot:active{transform:scale(.88)} .dot.on{color:#fff;border-color:transparent}
-  .want-btn{width:100%;cursor:pointer;font-weight:800;font-size:14px;border:1.5px solid var(--amber);background:var(--card);color:var(--amber);border-radius:var(--r-sm);padding:14px;margin-bottom:20px;transition:.15s}
+  .want-btn{width:100%;cursor:pointer;font-weight:800;font-size:14px;border:1.5px solid var(--amber);background:var(--card);color:var(--amber);border-radius:var(--r-sm);padding:14px;margin-bottom:0;transition:.15s}
   .want-btn[aria-pressed="true"]{background:var(--amber);color:var(--paper)}
   .photos{display:flex;gap:var(--gap-m);overflow-x:auto;padding-bottom:4px;margin-bottom:20px}
   .photo{position:relative;flex:none;width:78px;height:78px;border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);background:var(--mist)}
@@ -251,7 +252,7 @@
   .photo .del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;border:none;cursor:pointer;background:rgba(19,32,25,.66);color:#fff;font-size:13px;line-height:20px;padding:0}
   .addphoto{flex:none;width:78px;height:78px;border-radius:var(--r-sm);border:1.5px dashed var(--mist-2);background:var(--card);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--gap-s);color:var(--forest);font-size:11px;font-weight:700}
   .addphoto:disabled{opacity:.5}
-  .photo-note{font-size:11.5px;color:var(--moss);margin:0 0 10px}
+  .photo-note{font-size:11.5px;color:var(--moss);margin:10px 0 0}
   textarea{width:100%;min-height:48px;resize:none;overflow:hidden;font-family:inherit;font-size:14.5px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;outline:none}
   textarea:focus{border-color:var(--forest)}
   .sheet-foot{display:flex;align-items:center;gap:var(--gap-m);margin-top:22px}
@@ -379,13 +380,13 @@
   <label class="fld" for="d-notes" id="notesLabel">Notes</label>
   <textarea id="d-notes" placeholder=""></textarea>
   <div id="photoWrap">
-    <label class="fld" style="margin-bottom:4px">Photos</label>
-  <div class="photo-note">Please do not photograph occupied sites.</div>
+    <label class="fld">Photos</label>
     <div class="photos" id="photos"></div>
     <div class="photo-actions">
       <button class="pa-btn" id="cameraBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L8 6H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-4l-1.5-2Z"/><circle cx="12" cy="12.5" r="3.2"/></svg>Camera</button>
       <button class="pa-btn" id="libraryBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
     </div>
+    <div class="photo-note">Please do not photograph occupied sites.</div>
     <input type="file" id="photoInput" accept="image/*" multiple hidden>
     <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
   </div>
@@ -620,7 +621,7 @@ function fillGrid(card){ if(card.dataset.filled) return; const cg=CG_BY_ID(card.
 const MEDAL_SVG='<svg class="medal" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 1a11 11 0 1 0 .01 0z M12 4.4 13.88 9.41 19.23 9.65 15.04 12.99 16.47 18.15 12 15.2 7.53 18.15 8.96 12.99 4.77 9.65 10.12 9.41z"/></svg>';
 function chipInner(cg,s){ const k=keyOf(curPark.id,cg.id,s), v=sc('site',k), c=scoreColor(v), note=!!noteOf('site',k), want=wantOf(k), photo=photoKeys.has(k);
   const tr=(note&&photo)?MEDAL_SVG:((note||photo)?'<span class="nstar">★</span>':'');
-  return `${s}${c?`<span class="badge">${v}</span>`:''}${tr}`; }
+  return `${s}${tr}`; }
 function makeChip(cg,s){ const k=keyOf(curPark.id,cg.id,s), c=scoreColor(sc('site',k));
   const b=document.createElement('button'); b.className='site'+(c?' rated':'')+(wantOf(k)?' wanted':''); b.dataset.key=k; b.dataset.site=s; if(c) b.style.background=c;
   b.innerHTML=chipInner(cg,s); b.addEventListener('click',()=>openSheet('site',k,cg.id,s)); return b; }
@@ -699,7 +700,7 @@ function afterChange(){ persist();
   else refreshCgHeader(cur.cg); }
 function setScore(v){ const e=ensure(); e.score=(e.score===v?null:v); buzz(9); paintDots(); flashSaved(); afterChange(); }
 document.getElementById('wantBtn').addEventListener('click',function(){ const e=ensure(); e.want=!e.want; buzz(9);
-  this.setAttribute('aria-pressed',e.want); this.textContent=(e.want?'★ ':'☆ ')+'Wishlist'; if(e.want&&e.score===0) showThemeToast("A 0/5 on the wishlist? That doesn't make sense... noted anyway."); flashSaved(); persist(); if(cur.site) refreshChip(cur.k); renderGlance(); });
+  this.setAttribute('aria-pressed',e.want); this.textContent=(e.want?'★ ':'☆ ')+'Wishlist'; if(e.want&&e.score===0) showThemeToast("That doesn't make sense... noted anyways."); flashSaved(); persist(); if(cur.site) refreshChip(cur.k); renderGlance(); });
 function autoGrowNotes(el){ el.style.height='auto'; el.style.height=Math.max(48,el.scrollHeight)+'px'; }
 document.getElementById('d-notes').addEventListener('input',e=>{ autoGrowNotes(e.target); const en=ensure(); en.note=e.target.value; flashSaved(); persist(); if(cur.site) refreshChip(cur.k); else if(cur.type==='trail') refreshTrailCard(cur.trailName); });
 document.getElementById('clearBtn').addEventListener('click',()=>{ delete state[cur.type][cur.k]; const cnta=document.getElementById('d-notes'); cnta.value=''; autoGrowNotes(cnta);
@@ -810,7 +811,7 @@ function mixhex(a,b,t){ var A=parseInt(a.slice(1),16),B=parseInt(b.slice(1),16);
   var r=Math.round(((A>>16)&255)*(1-t)+((B>>16)&255)*t), g=Math.round(((A>>8)&255)*(1-t)+((B>>8)&255)*t), c=Math.round((A&255)*(1-t)+(B&255)*t);
   return '#'+((1<<24)|(r<<16)|(g<<8)|c).toString(16).slice(1).toUpperCase(); }
 function buildVars(t){ var P=t.paper,I=t.ink,F=t.primary,dark=!!t.dark;
-  var amber=dark?'#E7B34D':'#E0A22B';
+  var amber=mixhex(dark?'#F5CE4A':'#F2C728', F, .15);
   var v={'--paper':P,'--card':dark?mixhex(P,'#FFFFFF',.05):'#FFFFFF','--ink':I,
     '--forest':F,'--forest-2':mixhex(F,'#FFFFFF',.16),'--forest-press':mixhex(F,'#000000',.22),
     '--green-tint':mixhex(F,P,dark?.86:.88),'--green-tint-2':mixhex(F,P,dark?.74:.78),
