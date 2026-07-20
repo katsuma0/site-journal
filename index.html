@@ -170,7 +170,7 @@
   .cg-rate{appearance:none;cursor:pointer;font-size:12.5px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--forest);border-radius:99px;padding:8px 13px;white-space:nowrap;transition:.15s}
   .cg-rate.rated{color:#fff;border-color:transparent}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:var(--gap-m);margin-top:14px}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--gap-m);margin-top:14px}
   .site{position:relative;aspect-ratio:1;border-radius:var(--r-sm);border:1px solid var(--mist-2);background:var(--paper);
     font-weight:700;font-size:13px;color:var(--moss);cursor:pointer;display:flex;align-items:center;justify-content:center;
     transition:transform .12s;-webkit-tap-highlight-color:transparent;font-variant-numeric:tabular-nums}
@@ -178,9 +178,9 @@
   .site .badge{position:absolute;bottom:2px;right:4px;font-size:8.5px;font-weight:800;opacity:.95}
   .site .star{position:absolute;top:2px;left:4px;font-size:9px;color:var(--amber);line-height:1}
   .site.rated .star{color:#FFE0AE}
-  .site .nstar{position:absolute;top:5px;right:7px;font-size:9px;color:var(--moss);line-height:1}
+  .site .nstar{position:absolute;top:5px;right:7px;font-size:10px;color:var(--moss);line-height:1}
   .site.rated .nstar{color:rgba(255,255,255,.95)}
-  .site .medal{position:absolute;top:5px;right:6px;width:12px;height:12px;color:var(--moss);display:block}
+  .site .medal{position:absolute;top:5px;right:6px;width:13px;height:13px;color:var(--moss);display:block}
   .site.rated .medal{color:rgba(255,255,255,.95)}
   .site.hidden{display:none} .cg.filtered-empty{display:none}
   /* trails */
@@ -388,7 +388,7 @@
       <button class="pa-btn" id="libraryBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Add photos</button>
     </div>
     <div class="photos" id="photos"></div>
-    <div class="photo-note">Please do not photograph occupied sites.</div>
+    <div class="photo-note" id="photoNote">Please do not photograph occupied sites.</div>
     <input type="file" id="photoInput" accept="image/*" multiple hidden>
     <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
   </div>
@@ -687,7 +687,8 @@ function openSheet(type,k,cgId,site){ cur={type,k,cg:cgId,site,trailName:(type==
     document.getElementById('d-kind').textContent='Trail'; document.getElementById('d-title').textContent=cgId;
     document.getElementById('d-ctx').textContent=(t?fmtLen(t.length)+' · '+t.difficulty:''); wb.style.display='none'; pw.style.display=''; renderPhotos(k);
   } else { whr.style.display='none'; document.getElementById('d-kind').textContent='Campground'; document.getElementById('d-title').textContent=cgId;
-    document.getElementById('d-ctx').textContent=curPark.name; wb.style.display='none'; pw.style.display='none'; }
+    document.getElementById('d-ctx').textContent=curPark.name; wb.style.display='none'; pw.style.display=''; renderPhotos(k); }
+  document.getElementById('photoNote').hidden=(type==='trail');
   document.getElementById('notesLabel').textContent='Notes';
   document.getElementById('d-kind').style.display=(type==='site')?'none':'';
   const nta=document.getElementById('d-notes'); nta.value=noteOf(type,k); autoGrowNotes(nta); paintDots();
