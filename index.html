@@ -339,6 +339,9 @@
     border:2px solid var(--card);display:flex;align-items:center;justify-content:center;pointer-events:none}
   .pc-pinb svg{width:13px;height:13px;fill:currentColor}
   #sortRows .rcount{font-size:12.5px;opacity:.62}
+  @keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .view-anim{animation:viewIn .22s cubic-bezier(.22,1,.36,1)}
+  @media (prefers-reduced-motion: reduce){ .view-anim{animation:none} }
 </style>
 </head>
 <body>
@@ -497,7 +500,7 @@ function noteOf(type,k){ const e=state[type][k]; return e&&e.note?e.note:''; }
 function wantOf(k){ const e=state.site[k]; return !!(e&&e.want); }
 function buzz(ms){
   try{ const C=window.Capacitor;
-    if(C&&C.Plugins&&C.Plugins.Haptics){ C.Plugins.Haptics.impact({style:(ms>=12?'MEDIUM':'LIGHT')}); return; }
+    if(C&&C.Plugins&&C.Plugins.Haptics){ C.Plugins.Haptics.impact({style:'LIGHT'}); return; }
   }catch(e){}
   try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 if(navigator.storage&&navigator.storage.persist){ try{ navigator.storage.persist(); }catch(e){} }
@@ -657,10 +660,12 @@ function openPark(pid){
     <div id="topSection" hidden><div class="seclabel">Top sites</div><ul class="rank" id="topSites"></ul></div>`;
   renderCgs(); renderTrails(); wireParkControls(); updatePark(); renderGlance();
   document.getElementById('parkTitle').addEventListener('click',function(){ onParkNameTap(p); });
-  document.getElementById('view-parks').hidden=true; document.getElementById('view-park').hidden=false; window.scrollTo(0,0);
+  document.getElementById('view-parks').hidden=true; const vp=document.getElementById('view-park'); vp.hidden=false;
+  vp.classList.remove('view-anim'); void vp.offsetWidth; vp.classList.add('view-anim'); window.scrollTo(0,0);
   requestAnimationFrame(()=>{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; });
 }
-function goHome(){ document.getElementById('view-park').hidden=true; document.getElementById('view-parks').hidden=false; clearGSearch(); renderParks(); window.scrollTo(0,0); }
+function goHome(){ document.getElementById('view-park').hidden=true; const vh=document.getElementById('view-parks'); vh.hidden=false;
+  vh.classList.remove('view-anim'); void vh.offsetWidth; vh.classList.add('view-anim'); clearGSearch(); renderParks(); window.scrollTo(0,0); }
 document.getElementById('backBtn').addEventListener('click',goHome);
 (function(){ /* swipe right anywhere on the park page = back */
   var el=document.getElementById('view-park'), sx=0, sy=0, on=false;
