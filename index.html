@@ -549,13 +549,20 @@ function renderRegionRows(){ const box=document.getElementById('regionRows'); if
     box.appendChild(b); }); }
 function openRegion(){ renderRegionRows(); settingsBackdrop.classList.add('on'); document.getElementById('regionSheet').classList.add('on'); document.getElementById('regionSheet').scrollTop=0; lockScroll(); }
 function closeRegion(){ const rs=document.getElementById('regionSheet'); settingsBackdrop.classList.remove('on'); rs.classList.remove('on'); rs.style.transform=''; unlockScroll(); }
+function metaLine(p,st){ const isAlg=(p.region||'').indexOf('Algonquin')===0;
+  const town=((p.region||'').split(' · ').slice(1).join(' · ')||p.region);
+  const segs=[];
+  if(isAlg){ if(regionFilter!=='Algonquin') segs.push('Algonquin'); }
+  else { segs.push(town); const n=p.campgrounds.length; segs.push(n+' campground'+(n===1?'':'s')); }
+  segs.push(st.total+' sites');
+  return segs.map(x=>'<span>'+x+'</span>').join('<span>·</span>'); }
 function renderParks(){ const box=document.getElementById('parkList'); box.innerHTML='';
   if(!PARKS.length){ box.innerHTML=`<div class="empty" style="border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:26px 18px">No park data loaded.<br>Add parks in the SQL pipeline, run <b>export_to_app.py</b>, and place <b>parks-data.json</b> next to this app.</div>`; return; }
   const shown=(regionFilter==='All')?PARKS:PARKS.filter(p=>broadOf(p)===regionFilter);
   shown.forEach(p=>{ const st=parkStats(p); const started=st.rated>0;
     const b=document.createElement('button'); b.className='park-card';
     b.innerHTML=`<div class="pc-top"><span class="pc-name">${p.name}</span>${started?`<span class="pc-pct tnum">${st.rated}/${st.total}</span>`:''}</div>
-      <div class="pc-meta"><span>${(p.region||'').indexOf('Algonquin')===0?'Algonquin':((p.region||'').split(' · ').slice(1).join(' · ')||p.region)}</span><span>·</span><span>${p.campgrounds.length} campgrounds</span><span>·</span><span>${st.total} sites</span></div>
+      <div class="pc-meta">${metaLine(p,st)}</div>
       ${started?`<div class="pc-bar"><i style="width:${st.pct}%"></i></div>`:''}`;
     b.addEventListener('click',()=>openPark(p.id)); box.appendChild(b); }); }
 
