@@ -495,7 +495,12 @@ function scoreColor(s){ return (typeof s==='number'&&s>=0&&s<=5)?('color-mix(in 
 function sc(type,k){ const e=state[type][k]; return (e&&typeof e.score==='number')?e.score:null; }
 function noteOf(type,k){ const e=state[type][k]; return e&&e.note?e.note:''; }
 function wantOf(k){ const e=state.site[k]; return !!(e&&e.want); }
-function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+function buzz(ms){
+  try{ const C=window.Capacitor;
+    if(C&&C.Plugins&&C.Plugins.Haptics){ C.Plugins.Haptics.impact({style:(ms>=12?'MEDIUM':'LIGHT')}); return; }
+  }catch(e){}
+  try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+if(navigator.storage&&navigator.storage.persist){ try{ navigator.storage.persist(); }catch(e){} }
 function cgStats(park,cg){ const ks=cgSites(cg).map(s=>keyOf(park.id,cg.id,s)); const rated=ks.filter(k=>sc('site',k)!=null);
   const avg=rated.length?rated.reduce((a,k)=>a+sc('site',k),0)/rated.length:0;
   return {total:ks.length,rated:rated.length,pct:Math.round(rated.length/ks.length*100),avg}; }
