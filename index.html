@@ -356,8 +356,8 @@
   .site:active{transform:scale(.93)}
   .trail:active,.cg-head:active{transform:scale(.99)}
   .cg.open .grid{animation:viewIn .18s ease}
-  #view-parks.under{position:fixed;left:0;right:0;top:0;bottom:0;overflow:hidden;z-index:0;pointer-events:none}
-  #view-park.dragback{position:relative;z-index:1;background:var(--paper);min-height:100vh;
+  #view-park.dragback{position:fixed;left:0;right:0;z-index:5;background:var(--paper);
+    max-width:720px;margin:0 auto;padding:0 18px;min-height:100vh;
     box-shadow:-12px 0 34px rgba(0,0,0,.14);touch-action:pan-y;will-change:transform}
 </style>
 </head>
@@ -366,7 +366,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.109 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.110 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -707,15 +707,16 @@ document.getElementById('backBtn').addEventListener('click',goHome);
   }); })();
 (function(){ /* interactive drag-back: the park page follows your finger and reveals home underneath */
   var vp=document.getElementById('view-park'), vh=document.getElementById('view-parks');
-  var sx=0, sy=0, dx=0, lastX=0, lastT=0, vel=0, deciding=false, dragging=false;
-  function prep(){ vh.hidden=false; vh.classList.add('under'); vh.style.transform='translateY(-'+homeScrollY+'px)'; vp.classList.add('dragback'); }
+  var sx=0, sy=0, dx=0, lastX=0, lastT=0, vel=0, deciding=false, dragging=false, parkScrollY=0;
+  function prep(){ parkScrollY=window.scrollY||document.documentElement.scrollTop||0;
+    vp.classList.add('dragback'); vp.style.top=(-parkScrollY)+'px';
+    vh.hidden=false; window.scrollTo(0,homeScrollY); }
   function cancel(){ vp.style.transition='transform .22s cubic-bezier(.22,1,.36,1)'; vp.style.transform='translateX(0)';
-    setTimeout(function(){ vp.style.transition=''; vp.style.transform=''; vp.classList.remove('dragback');
-      vh.classList.remove('under'); vh.style.transform=''; vh.hidden=true; },230); }
+    setTimeout(function(){ window.scrollTo(0,parkScrollY); vh.hidden=true;
+      vp.style.transition=''; vp.style.transform=''; vp.style.top=''; vp.classList.remove('dragback'); },230); }
   function complete(){ buzz(9);
     vp.style.transition='transform .18s ease-out'; vp.style.transform='translateX(105%)';
-    setTimeout(function(){ vp.style.transition=''; vp.style.transform=''; vp.classList.remove('dragback');
-      vh.classList.remove('under'); vh.style.transform=''; vp.hidden=true; vh.hidden=false;
+    setTimeout(function(){ vp.style.transition=''; vp.style.transform=''; vp.style.top=''; vp.classList.remove('dragback'); vp.hidden=true;
       clearGSearch(); renderParks(); window.scrollTo(0,homeScrollY); },190); }
   vp.addEventListener('touchstart',function(e){ if(e.touches.length!==1) return;
     sx=e.touches[0].clientX; sy=e.touches[0].clientY; lastX=sx; lastT=Date.now(); vel=0; dx=0; deciding=true; dragging=false; },{passive:true});
