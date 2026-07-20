@@ -101,8 +101,9 @@
   .gresult{width:100%;text-align:left;appearance:none;background:var(--card);border:1px solid var(--line);
     border-radius:var(--r-sm);padding:var(--pad-row);margin-bottom:var(--gap-m);cursor:pointer;display:flex;align-items:center;gap:var(--gap-m)}
   .gresult:active{transform:scale(.995)}
-  .gresult .tag{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--paper);align-self:center;
-    background:var(--forest);border-radius:99px;padding:4px 0;display:inline-block;width:42px;text-align:center}
+  .gresult .tag{flex:0 0 46px;width:46px;height:22px;display:flex;align-items:center;justify-content:center;align-self:center;
+    font-size:9.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;line-height:1;padding:0;
+    color:var(--paper);background:var(--forest);border-radius:99px}
   .gresult .tag.cg{background:var(--forest-2)} .gresult .tag.site{background:var(--amber)} .gresult .tag.trail{background:#3E7CA6}
   .gresult .grow{flex:1;min-width:0}
   .gresult .gt{display:block;font-weight:700;font-size:15px}
@@ -232,10 +233,10 @@
 
   .backdrop{position:fixed;inset:0;background:rgba(19,32,25,.5);opacity:0;pointer-events:none;transition:.22s;z-index:40}
   .backdrop.on{opacity:1;pointer-events:auto}
-  .sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,102%);width:min(540px,100%);background:var(--paper);z-index:50;
+  .sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;transform:translateY(102%);width:min(540px,100%);background:var(--paper);z-index:50;
     border-radius:var(--r) var(--r) 0 0;padding:8px 22px calc(26px + env(safe-area-inset-bottom));box-shadow:0 -8px 40px rgba(19,32,25,.22);
     transition:transform .3s cubic-bezier(.22,1,.36,1);max-height:92vh;overflow:auto}
-  .sheet.on{transform:translate(-50%,0)}
+  .sheet.on{transform:translateY(0)}
   .grabber{width:40px;height:4px;border-radius:99px;background:var(--mist-2);margin:7px auto 16px}
   .sheet .kind{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--forest)}
   .sheet .d-where{color:var(--forest);font-weight:700;font-size:14px;letter-spacing:-.01em;margin-top:2px}
@@ -1066,7 +1067,7 @@ function makeSheetSwipe(el,closeFn){
     if(!horiz && Math.abs(tx)>Math.abs(ty)+8) horiz=true;
     if(horiz) return;
     dy=ty;
-    if(dy>0){ e.preventDefault(); el.style.transform='translate(-50%,'+dy+'px)'; }
+    if(dy>0){ e.preventDefault(); el.style.transform='translateY('+dy+'px)'; }
   },{passive:false});
   el.addEventListener('touchend',function(){
     if(!dragging) return; dragging=false; el.style.transition='';
