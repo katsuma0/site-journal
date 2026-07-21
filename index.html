@@ -372,7 +372,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.118 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.119 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -571,8 +571,11 @@ function searchAll(q){ q=q.trim().toLowerCase(); if(!q) return [];
   const toks=q.split(/\s+/).filter(Boolean);
   const siteTok=toks.filter(t=>/\d/.test(t)), nameTok=toks.filter(t=>!/\d/.test(t)), nameQ=nameTok.join(' ');
   const res=[];
-  if(nameQ && !siteTok.length) PARKS.forEach(p=>{ if(p.name.toLowerCase().includes(nameQ))
-    res.push({type:'park',score:nameHit(p.name,nameQ,60),parkId:p.id,title:p.name,sub:((p.region||'').split(' · ').slice(1).join(' · ')||p.region)}); });
+  const STOP=['provincial','park','parks','the'];
+  const pToks=nameTok.filter(t=>STOP.indexOf(t)<0);
+  if(pToks.length && !siteTok.length) PARKS.forEach(p=>{ const pn=p.name.toLowerCase();
+    if(pToks.every(t=>pn.includes(t)))
+    res.push({type:'park',score:nameHit(p.name,pToks.join(' '),60),parkId:p.id,title:p.name,sub:((p.region||'').split(' · ').slice(1).join(' · ')||p.region)}); });
   SEARCH_CGS.forEach(c=>{ const cgN=c.cgName.toLowerCase(), hay=(c.parkName+' '+c.cgName).toLowerCase();
     if(siteTok.length){ const nameOk=!nameQ||nameTok.every(t=>hay.includes(t)); if(!nameOk) return;
       siteTok.forEach(st=>{ if(c.siteSet.has(st)){ const label=c.sitesOrig.find(s=>s.toLowerCase()===st);
