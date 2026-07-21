@@ -394,6 +394,7 @@
   .ctrack i{background:var(--forest)}
   .dbar .dc,.cgbar .cc{flex:0 0 34px;font-size:12px;font-weight:700;color:var(--moss)}
   .cgbar .cn{flex:0 0 34%;font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .townlist{max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:2px}
 </style>
 </head>
 <body>
@@ -401,7 +402,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.129 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.130 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -493,10 +494,14 @@
   <div class="grabber"></div>
   <div class="kind" style="margin-bottom:12px">Sort</div>
   <div id="sortRows"></div>
-  <div id="townPick">
-    <input id="townQ" class="townq" type="text" placeholder="Departure" autocomplete="off">
-    <div id="townList"></div>
-  </div>
+
+</div>
+
+<div class="sheet" id="townSheet" role="dialog" aria-modal="true" aria-label="Departure">
+  <div class="grabber"></div>
+  <div class="kind" style="margin-bottom:12px">Departure</div>
+  <input id="townQ" class="townq" type="text" placeholder="Search a city or town" autocomplete="off">
+  <div id="townList" class="townlist"></div>
 </div>
 
 <div class="sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-label="Settings">
@@ -749,12 +754,19 @@ function renderSortRows(){ const box=document.getElementById('sortRows'); if(!bo
     b.innerHTML='<span>'+disp+'</span><span class="rcount">'+hint+'</span>';
     b.addEventListener('click',()=>{ sortMode=m; try{localStorage.setItem('site-journal-sort',m);}catch(e){} buzz(9); closeSort(); renderFilters(); renderParks(); });
     box.appendChild(b); });
-  const q=document.getElementById('townQ');
-  if(q){ q.value=''; q.placeholder='Departure: '+(ORIGIN?ORIGIN.name:'Toronto (GTA)'); }
-  const tl=document.getElementById('townList'); if(tl) tl.innerHTML=''; }
+  const tb=document.createElement('button'); tb.className='rrow';
+  tb.innerHTML='<span>Departure</span><span class="rcount">'+(ORIGIN?ORIGIN.name:'Toronto (GTA)')+'</span>';
+  tb.addEventListener('click',()=>{ buzz(6); closeSort(); openTown(); });
+  box.appendChild(tb); }
+function openTown(){ settingsBackdrop.classList.add('on'); const ts=document.getElementById('townSheet');
+  ts.classList.add('on'); ts.scrollTop=0; lockScroll();
+  const q=document.getElementById('townQ'); q.value=''; renderTownList(''); setTimeout(()=>q.focus(),80); }
+function closeTown(){ const ts=document.getElementById('townSheet'); settingsBackdrop.classList.remove('on');
+  ts.classList.remove('on'); ts.style.transform=''; unlockScroll();
+  const q=document.getElementById('townQ'); if(q) q.blur(); }
 function renderTownList(q){ const list=document.getElementById('townList'); q=(q||'').trim().toLowerCase();
-  if(!q){ list.innerHTML=''; return; }
-  const hits=[['Toronto (GTA)',0,0]].concat(TOWNS).filter(t=>t[0].toLowerCase().indexOf(q)>=0).slice(0,6);
+  const all=[['Toronto (GTA)',0,0]].concat(TOWNS);
+  const hits=(q?all.filter(t=>t[0].toLowerCase().indexOf(q)>=0):all).slice(0,q?8:16);
   list.innerHTML='';
   hits.forEach(t=>{ const b=document.createElement('button'); b.className='rrow';
     b.innerHTML='<span>'+t[0]+'</span>';
@@ -762,7 +774,7 @@ function renderTownList(q){ const list=document.getElementById('townList'); q=(q
       if(t[0]==='Toronto (GTA)'){ ORIGIN=null; try{localStorage.removeItem('site-journal-origin');}catch(e){} }
       else{ ORIGIN={name:t[0],lat:t[1],lon:t[2]}; try{localStorage.setItem('site-journal-origin',JSON.stringify(ORIGIN));}catch(e){} }
       sortMode='Closest to GTA'; try{localStorage.setItem('site-journal-sort',sortMode);}catch(e){}
-      buzz(9); closeSort(); renderFilters(); renderParks(); });
+      buzz(9); closeTown(); renderFilters(); renderParks(); });
     list.appendChild(b); }); }
 (function(){ const q=document.getElementById('townQ'); if(q) q.addEventListener('input',()=>renderTownList(q.value)); })();
 function openSort(){ renderSortRows(); settingsBackdrop.classList.add('on'); document.getElementById('sortSheet').classList.add('on'); document.getElementById('sortSheet').scrollTop=0; lockScroll(); }
@@ -1346,6 +1358,8 @@ makeSheetSwipe(settingsSheet,closeSettings);
 makeSheetSwipe(document.getElementById('regionSheet'),closeRegion);
 makeSheetSwipe(document.getElementById('sortSheet'),closeSort);
 settingsBackdrop.addEventListener('click',closeSort);
+settingsBackdrop.addEventListener('click',closeTown);
+makeSheetSwipe(document.getElementById('townSheet'),closeTown);
 document.getElementById('sortPill').addEventListener('click',function(){ buzz(6); openSort(); });
 settingsBackdrop.addEventListener('click',closeRegion);
 document.getElementById('regionPill').addEventListener('click',function(){ buzz(6); openRegion(); });
