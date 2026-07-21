@@ -401,6 +401,10 @@
   .dummybtn{display:block;width:100%;margin-top:12px;appearance:none;border:none;cursor:pointer;font-family:inherit;
     background:var(--forest);color:var(--paper);font-weight:800;font-size:13.5px;border-radius:var(--r-sm);padding:12px}
   .dummybtn:active{transform:scale(.98)}
+  .dedic{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:26px 22px;margin-bottom:14px;text-align:center}
+  .dedic .d-for{font-weight:800;font-size:16px;letter-spacing:.02em;margin-bottom:14px}
+  .dedic p{font-style:italic;font-size:14px;line-height:1.75;color:var(--ink);margin:0 auto 12px;max-width:30em}
+  .dedic .d-sign{margin-top:16px;font-weight:700;font-size:13.5px;color:var(--moss)}
 </style>
 </head>
 <body>
@@ -408,7 +412,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.138 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.139 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -648,6 +652,7 @@ function onGSearch(){ const gq=document.getElementById('gq'), q=gq.value;
   if(q.trim().toLowerCase()==='dummydata'){ renderDummyCard(''); return; }
   if(q.trim().toLowerCase()==='dummyhundop'){ renderHundCard(''); return; }
   if(q.trim().toLowerCase()==='-dummyhundop'){ renderZeroCard(''); return; }
+  if(['tolaurie','to laurie'].indexOf(q.trim().toLowerCase())>=0){ renderLaurie(); return; }
   document.getElementById('gsearch').classList.toggle('has',!!q.trim());
   const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
   if(!q.trim()){ rbox.hidden=true; rbox.innerHTML=''; plist.hidden=false; if(about) about.hidden=false; return; }
@@ -700,6 +705,18 @@ function renderHundCard(msg){
     +'<button class="dummybtn" id="hundGo">'+(msg?'Run again':'Max everything to 5/5')+'</button></div>';
   const go=document.getElementById('hundGo');
   if(go) go.addEventListener('click',()=>{ buzz(12); const m=plantHund(); renderHundCard(m); });
+}
+function renderLaurie(){
+  const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
+  plist.hidden=true; if(about) about.hidden=true; rbox.hidden=false;
+  rbox.innerHTML='<div class="dedic">'
+    +'<div class="d-for">For Laurie</div>'
+    +'<p>who, on the third of July, 2026, introduced us to Bowser, the famous snapping turtle of Gurd Lake at Grundy.</p>'
+    +'<p>You and your husband were the inspiration for this app. Every park in here is, in some small way, downstream of that afternoon.</p>'
+    +'<p>It was a pleasure chatting with you. I hope our paths cross again, same lake, same light.</p>'
+    +'<div class="d-sign">Katsuma</div>'
+    +'</div>';
+  buzz(6);
 }
 function renderZeroCard(msg){
   const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
