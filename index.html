@@ -373,6 +373,27 @@
   .dbg .drow:last-child{border-bottom:none}
   .dbg .dk{color:var(--moss)}
   .dbg .dv{color:var(--ink);font-weight:700;text-align:right;word-break:break-word;font-variant-numeric:tabular-nums}
+  .statscard{border:1px solid var(--line);border-radius:var(--r);background:var(--card);overflow:hidden}
+  .statscard summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+    padding:var(--pad-card);font-weight:700;font-size:15.5px;color:var(--ink);-webkit-user-select:none;user-select:none;touch-action:manipulation}
+  .statscard summary::-webkit-details-marker{display:none}
+  .statscard[open] summary .chev{transform:rotate(180deg)}
+  .statscard .chev{transition:transform .2s;color:var(--moss)}
+  .statsbody{padding:2px 16px 16px}
+  .stat-empty{color:var(--moss);font-size:13px;padding:4px 0 8px}
+  .stiles{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-m);margin-bottom:6px}
+  .stile{background:var(--mist);border-radius:var(--r-sm);padding:10px 8px;text-align:center}
+  .stile b{display:block;font-size:18px;letter-spacing:-.01em}
+  .stile b i{font-style:normal;font-size:12px;color:var(--moss);font-weight:700}
+  .stile span{display:block;font-size:10.5px;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+  .glabel{font-size:11px;font-weight:800;color:var(--moss);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 8px}
+  .dbar,.cgbar{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .dbar .dl{flex:0 0 14px;font-size:12px;font-weight:800;color:var(--moss);text-align:right}
+  .dtrack,.ctrack{flex:1;height:12px;background:var(--mist);border-radius:99px;overflow:hidden}
+  .dtrack i,.ctrack i{display:block;height:100%;border-radius:99px}
+  .ctrack i{background:var(--forest)}
+  .dbar .dc,.cgbar .cc{flex:0 0 34px;font-size:12px;font-weight:700;color:var(--moss)}
+  .cgbar .cn{flex:0 0 34%;font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -380,7 +401,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.127 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.128 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -400,6 +421,7 @@
         <p>So I wanted to create a personal logger where you can log your favourite sites and the ones you'd rather avoid. When you have free time out camping, you can take a nice walk around the campground and jot down which sites you'd like to book next, give it a rating, and so on.</p>
         <p>It's a nice excuse for a walk around the campgrounds, and it gives you ease knowing which campsite to book next time and not be surprised with a funky site.</p>
         <label class="fld">Versions</label>
+        <div class="verline"><span class="vv">v0.128</span>Added a per park stats section with rating graphs</div>
         <div class="verline"><span class="vv">v0.116</span>Added driving times from any Ontario town you choose</div>
         <div class="verline"><span class="vv">v0.113</span>Refreshed every park theme to match its name and character</div>
         <div class="verline"><span class="vv">v0.111</span>Added per park data reset and this version history</div>
@@ -815,7 +837,9 @@ function openPark(pid){
     </div>
     </div>
     <div id="wantSection" hidden><div class="seclabel">Wishlist</div><div id="wantList"></div></div>
-    <div id="topSection" hidden><div class="seclabel">Top sites</div><ul class="rank" id="topSites"></ul></div>`;
+    <div id="topSection" hidden><div class="seclabel">Top sites</div><ul class="rank" id="topSites"></ul></div>
+    ${p.dayuse?'':`<div class="seclabel">Stats</div>
+    <details class="statscard"><summary>Park stats<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></summary><div class="statsbody" id="statsBody"></div></details>`}`;
   renderCgs(); renderTrails(); wireParkControls(); updatePark(); renderGlance();
   document.getElementById('parkTitle').addEventListener('click',function(){ onParkNameTap(p); });
   homeScrollY=window.scrollY||document.documentElement.scrollTop||0;
@@ -1015,7 +1039,36 @@ function openLightbox(src){ document.getElementById('lightboxImg').src=src; docu
 document.getElementById('lightbox').addEventListener('click',()=>document.getElementById('lightbox').classList.remove('on'));
 
 /* ================= progress + glance ================= */
-function updatePark(){}
+function updatePark(){ renderParkStats(); }
+function renderParkStats(){ const p=curPark, box=document.getElementById('statsBody'); if(!p||!box) return;
+  let rated=0,total=0,sum=0,want=0,notes=0,photos=0; const dist=[0,0,0,0,0,0];
+  p.campgrounds.forEach(cg=>{ cgSites(cg).forEach(sit=>{ const k=keyOf(p.id,cg.id,sit); total++;
+    const v=sc('site',k); if(v!=null){ rated++; sum+=v; dist[v]++; }
+    if(wantOf(k)) want++; if(noteOf('site',k)) notes++; if(photoKeys.has(k)) photos++; }); });
+  if(!rated&&!want&&!notes&&!photos){ box.innerHTML='<div class="stat-empty">Rate a few sites and the graphs grow here.</div>'; return; }
+  const avg=rated?(sum/rated):0, maxD=Math.max.apply(null,dist)||1;
+  let h='<div class="stiles">'
+    +'<div class="stile"><b>'+(rated?avg.toFixed(2):'-')+'</b><span>Average</span></div>'
+    +'<div class="stile"><b>'+rated+'<i>/'+total+'</i></b><span>Rated</span></div>'
+    +'<div class="stile"><b>'+want+'</b><span>Wishlist</span></div>'
+    +'<div class="stile"><b>'+photos+'</b><span>Photos</span></div>'
+    +'<div class="stile"><b>'+notes+'</b><span>Notes</span></div>'
+    +'<div class="stile"><b>'+Math.round(rated/Math.max(1,total)*100)+'<i>%</i></b><span>Scouted</span></div>'
+  +'</div>';
+  if(rated){
+    h+='<div class="glabel">Rating spread</div><div class="dbars">';
+    for(let v=5; v>=0; v--){ const c=dist[v], w=Math.round(c/maxD*100);
+      h+='<div class="dbar"><span class="dl tnum">'+v+'</span><span class="dtrack"><i style="width:'+Math.max(c?6:0,w)+'%;background:'+(scoreColor(v)||'var(--forest)')+'"></i></span><span class="dc tnum">'+c+'</span></div>'; }
+    h+='</div>';
+  }
+  const multi=p.campgrounds.length>1;
+  if(multi){
+    h+='<div class="glabel">By campground</div><div class="cgbars">';
+    p.campgrounds.forEach(cg=>{ const st=cgStats(p,cg);
+      h+='<div class="cgbar"><span class="cn">'+cg.id+'</span><span class="ctrack"><i style="width:'+st.pct+'%"></i></span><span class="cc tnum">'+st.rated+'/'+st.total+'</span></div>'; });
+    h+='</div>';
+  }
+  box.innerHTML=h; }
 
 async function renderGlance(){ const p=curPark; if(!p) return;
   if(p.dayuse){ const g=document.getElementById('glanceSection'); if(g) g.hidden=true; const w=document.getElementById('wantSection'); if(w) w.hidden=true; return; }
