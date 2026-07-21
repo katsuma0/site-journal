@@ -416,6 +416,15 @@
   .filters .fchip{flex:0 1 auto;min-width:0;justify-content:center;padding:9px 14px;font-size:12.5px}
   .fchip .fct{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:0 1 auto}
   .fchip svg{flex:none}
+  /* tap-target audit: 44pt effective targets */
+  .fchip{position:relative}
+  .fchip::after{content:"";position:absolute;left:-2px;right:-2px;top:-7px;bottom:-7px}
+  .backbtn{padding:12px 14px;margin:-12px -14px}
+  .resetlink{position:relative}
+  .resetlink::after{content:"";position:absolute;left:-16px;right:-16px;top:-12px;bottom:-12px}
+  .dummybtn{min-height:44px}
+  .gsec{min-height:46px}
+  .ded-close{min-height:44px}
 </style>
 </head>
 <body>
@@ -423,13 +432,13 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.151 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.152 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Photos and ratings are saved to this device only.</div>
   </div>
   <div class="wrap">
     <div class="gsearch" id="gsearch">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="gq" inputmode="search" autocomplete="off" placeholder="Search, e.g. Jack Pine 720">
+      <input id="gq" inputmode="search" autocomplete="off" placeholder="Search parks, sites, or trails">
       <button class="gclear" id="gclear" aria-label="Clear search">✕</button>
     </div>
     <div id="gresults" class="gresults" hidden></div>
@@ -672,7 +681,7 @@ function onGSearch(){ const gq=document.getElementById('gq'), q=gq.value;
   if(!q.trim()){ rbox.hidden=true; rbox.innerHTML=''; plist.hidden=false; if(about) about.hidden=false; return; }
   plist.hidden=true; if(about) about.hidden=true; rbox.hidden=false;
   const results=searchAll(q);
-  if(!results.length){ rbox.innerHTML='<div class="gnone">No matches. Try a park, a campground, or “Hemlock 112”.</div>'; return; }
+  if(!results.length){ rbox.innerHTML='<div class="gnone">No matches. Try a park, a campground, or Hemlock 112.</div>'; return; }
   const tagLabel={park:'Park',cg:'Camp',site:'Site',trail:'Trail'};
   rbox.innerHTML=results.map((r,i)=>`<button class="gresult" data-i="${i}"><span class="tag ${r.type}">${tagLabel[r.type]}</span><span class="grow"><span class="gt">${r.title}</span><span class="gs">${r.sub}</span></span></button>`).join('');
   rbox.querySelectorAll('.gresult').forEach(el=>el.addEventListener('click',()=>gotoResult(results[+el.dataset.i])));
