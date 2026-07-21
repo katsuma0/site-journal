@@ -366,6 +366,13 @@
   .townq{width:100%;font-size:16px;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);
     border-radius:var(--r-sm);padding:12px 14px;outline:none;margin:2px 0 10px}
   .ghostpark{display:none}
+  .dbg{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card);padding:14px 16px;margin-bottom:14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6}
+  .dbg .dhead{color:var(--forest);font-weight:700;margin-bottom:10px;letter-spacing:.02em}
+  .dbg .drow{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:3px 0;border-bottom:1px dashed var(--line)}
+  .dbg .drow:last-child{border-bottom:none}
+  .dbg .dk{color:var(--moss)}
+  .dbg .dv{color:var(--ink);font-weight:700;text-align:right;word-break:break-word;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -373,7 +380,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.124 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.125 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -603,6 +610,7 @@ function searchAll(q){ q=q.trim().toLowerCase(); if(!q) return [];
 }
 function onGSearch(){ const gq=document.getElementById('gq'), q=gq.value;
   if(q.trim().toLowerCase()==='debugsearch'){ renderDebug(); return; }
+  if(q.trim().toLowerCase()==='statsearch'){ renderStats(); return; }
   document.getElementById('gsearch').classList.toggle('has',!!q.trim());
   const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
   if(!q.trim()){ rbox.hidden=true; rbox.innerHTML=''; plist.hidden=false; if(about) about.hidden=false; return; }
@@ -618,19 +626,44 @@ function clearGSearch(){ const gq=document.getElementById('gq'); if(gq) gq.value
   const rb=document.getElementById('gresults'); if(rb){ rb.hidden=true; rb.innerHTML=''; }
   const pl=document.getElementById('parkList'); if(pl) pl.hidden=false;
   const ab=document.querySelector('.about-scout'); if(ab) ab.hidden=false; }
-function renderDebug(){
+function esc(x){ return String(x).replace(/</g,'&lt;'); }
+function renderConsole(cmd,pairs){
   const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
   plist.hidden=true; if(about) about.hidden=true; rbox.hidden=false;
-  const lines=[];
-  try{ lines.push('parks loaded: '+PARKS.length); }catch(e){ lines.push('PARKS: '+e.message); }
-  try{ lines.push('egg in data: '+(PARKS.some(p=>p.id===EGG_ID)?'yes':'NO')); }catch(e){ lines.push('egg check: '+e.message); }
-  try{ lines.push('egg found flag: '+eggFound()); }catch(e){ lines.push('eggFound: '+e.message); }
-  try{ const r=searchAll('queen'); lines.push('searchAll(queen): '+r.length+' results'+(r.length?(' | first: '+r[0].title):'')); }
-  catch(e){ lines.push('searchAll THREW: '+e.message); }
-  try{ const r2=searchAll('q'); lines.push('searchAll(q): '+r2.length+' results'); }catch(e){ lines.push('searchAll(q) THREW: '+e.message); }
-  lines.push('capacitor: '+(window.Capacitor?'yes':'no'));
-  lines.push('errors: '+(DEBUG_ERRS.length?DEBUG_ERRS.slice(-4).join(' || '):'none'));
-  rbox.innerHTML=lines.map(l=>'<div class="gnone" style="text-align:left;margin-bottom:8px">'+l.replace(/</g,'&lt;')+'</div>').join('');
+  rbox.innerHTML='<div class="dbg"><div class="dhead">&gt; '+esc(cmd)+'</div>'+
+    pairs.map(p=>'<div class="drow"><span class="dk">'+esc(p[0])+'</span><span class="dv">'+esc(p[1])+'</span></div>').join('')+
+    '</div>';
+}
+function renderDebug(){
+  const pairs=[];
+  try{ pairs.push(['parks_loaded',PARKS.length]); }catch(e){ pairs.push(['parks_loaded','ERR '+e.message]); }
+  try{ pairs.push(['egg_in_data',PARKS.some(p=>p.id===EGG_ID)?'true':'FALSE']); }catch(e){ pairs.push(['egg_in_data','ERR']); }
+  try{ pairs.push(['egg_found',String(eggFound())]); }catch(e){ pairs.push(['egg_found','ERR']); }
+  try{ const r=searchAll('queen'); pairs.push(['searchAll("queen")',r.length+(r.length?' -> '+r[0].title:'')]); }
+  catch(e){ pairs.push(['searchAll("queen")','THREW '+e.message]); }
+  try{ pairs.push(['searchAll("q")',searchAll('q').length]); }catch(e){ pairs.push(['searchAll("q")','THREW']); }
+  pairs.push(['capacitor',window.Capacitor?'true':'false']);
+  pairs.push(['errors',DEBUG_ERRS.length?DEBUG_ERRS.slice(-3).join(' | '):'none']);
+  renderConsole('debugsearch',pairs);
+}
+function renderStats(){
+  let sites=0,cgs=0,trails=0,dayuse=0,five=0,zero=0; const parks=new Set();
+  ['site','campground','trail'].forEach(b=>{ const o=state[b]||{};
+    for(const k in o){ const e=o[k]; const sv=(e&&typeof e.score==='number')?e.score:null; if(sv==null) continue;
+      const pid=k.split('#')[0], park=PARK_BY_ID[pid];
+      if(b==='site') sites++;
+      else if(b==='trail') trails++;
+      else{ const nm=k.slice(pid.length+1); if(park&&park.dayuse&&nm===park.name) dayuse++; else cgs++; }
+      parks.add(pid); if(sv===5) five++; if(sv===0) zero++; } });
+  renderConsole('statsearch',[
+    ['parks_rated',parks.size],
+    ['campgrounds_rated',cgs],
+    ['sites_rated',sites],
+    ['trails_rated',trails],
+    ['dayuse_rated',dayuse],
+    ['five_stars_given',five],
+    ['zero_stars_given',zero]
+  ]);
 }
 function gotoResult(r){ if(r.parkId===EGG_ID&&!eggFound()) revealEgg();
   clearGSearch(); openPark(r.parkId);
