@@ -408,7 +408,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.134 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.135 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -973,15 +973,6 @@ function openPark(pid){
     <div id="cgs"></div>
 
     ${(p.trails&&p.trails.length)?'<div class="seclabel">Trails</div><div id="trails"></div>':''}
-    <div id="glanceSection" hidden>
-    <div class="seclabel">At a glance</div>
-    <div class="stat-row">
-      <div class="stat"><div class="v tnum" id="s-count">0</div><div class="l">Rated</div></div>
-      <div class="stat"><div class="v tnum" id="s-avg">-</div><div class="l">Avg</div></div>
-      <div class="stat"><div class="v tnum" id="s-pct">0/0</div><div class="l">Scouted</div></div>
-      <div class="stat"><div class="v tnum" id="s-want">0</div><div class="l">Wishlist</div></div>
-    </div>
-    </div>
     <div id="wantSection" hidden><div class="seclabel">Wishlist</div><div id="wantList"></div></div>
     <div id="topSection" hidden><div class="seclabel">Top sites</div><ul class="rank" id="topSites"></ul></div>
     ${p.dayuse?'':`<div class="seclabel">Stats</div>
@@ -1219,12 +1210,10 @@ function renderParkStats(){ const p=curPark, box=document.getElementById('statsB
   box.innerHTML=h; }
 
 async function renderGlance(){ const p=curPark; if(!p) return;
-  if(p.dayuse){ const g=document.getElementById('glanceSection'); if(g) g.hidden=true; const w=document.getElementById('wantSection'); if(w) w.hidden=true; return; }
+  if(p.dayuse){ const w=document.getElementById('wantSection'); if(w) w.hidden=true; return; }
   const st=parkStats(p); const rated=[], wants=[];
   p.campgrounds.forEach(cg=>cgSites(cg).forEach(s=>{ const k=keyOf(p.id,cg.id,s), e=state.site[k]; if(e&&typeof e.score==='number') rated.push({s,k,e,cg}); if(e&&e.want) wants.push({s,k,e,cg}); }));
-  const setV=(id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
-  setV('s-count',st.rated); setV('s-avg',st.rated?st.avg.toFixed(1):'-'); setV('s-pct',st.rated+'/'+st.total); setV('s-want',wants.length);
-  const glanceSec=document.getElementById('glanceSection'); if(glanceSec) glanceSec.hidden = st.rated===0;
+  void st;
   const wl=wants.sort((a,b)=>((b.e.score??-1))-((a.e.score??-1))||a.s.localeCompare(b.s,undefined,{numeric:true})).slice(0,5);
   const wantSec=document.getElementById('wantSection'); if(wantSec) wantSec.hidden = wl.length===0;
   const topSec=document.getElementById('topSection'); if(topSec) topSec.hidden = rated.length===0;
