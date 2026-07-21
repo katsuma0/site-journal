@@ -408,7 +408,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.135 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.136 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -995,13 +995,20 @@ function goHome(){ const vp=document.getElementById('view-park');
     clearGSearch(); renderParks(); window.scrollTo(0,homeScrollY); if(window.parkResetSync) parkResetSync(); },150); }
 document.getElementById('backBtn').addEventListener('click',goHome);
 (function(){ const rb=document.getElementById('resetBtn'); if(!rb) return; let armed=false, t=null;
-  window.parkResetSync=function(){ armed=false; clearTimeout(t);
-    if(curPark&&!document.getElementById('view-park').hidden){ rb.style.display='inline'; rb.textContent='Reset '+curPark.name+' data'; rb.classList.remove('armed'); }
-    else{ rb.style.display='none'; rb.classList.remove('armed'); } };
-  rb.addEventListener('click',async function(){ if(!curPark) return;
-    if(!armed){ armed=true; rb.textContent='Tap again to erase this park'; rb.classList.add('armed');
+  function onPark(){ return curPark&&!document.getElementById('view-park').hidden; }
+  window.parkResetSync=function(){ armed=false; clearTimeout(t); rb.classList.remove('armed'); rb.style.display='inline';
+    rb.textContent=onPark()?('Reset '+curPark.name+' data'):'Reset all data'; };
+  rb.addEventListener('click',async function(){
+    const park=onPark();
+    if(!armed){ armed=true; rb.classList.add('armed');
+      rb.textContent=park?'Tap again to erase this park':'Tap again to erase everything';
       t=setTimeout(function(){ window.parkResetSync(); },4000); return; }
-    clearTimeout(t); await wipeParkData(curPark.id); window.parkResetSync(); });
+    clearTimeout(t);
+    if(park){ await wipeParkData(curPark.id); window.parkResetSync(); return; }
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    ['site-journal-theme','site-journal-theme-vars','site-journal-unlocks','site-journal-sort','site-journal-origin'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+    try{ indexedDB.deleteDatabase('scout-photos'); }catch(e){}
+    setTimeout(function(){ location.reload(); },200); });
   window.parkResetSync(); })();
 (function(){ /* interactive drag-back: the park page follows your finger and reveals home underneath */
   var vp=document.getElementById('view-park'), vh=document.getElementById('view-parks');
