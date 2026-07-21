@@ -373,7 +373,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.122 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.123 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -552,6 +552,9 @@ function buzz(ms){
   }catch(e){}
   try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 if(navigator.storage&&navigator.storage.persist){ try{ navigator.storage.persist(); }catch(e){} }
+var DEBUG_ERRS=[];
+window.addEventListener('error',function(e){ try{ DEBUG_ERRS.push((e.message||'?')+' @'+(e.lineno||'?')); }catch(x){} });
+window.addEventListener('unhandledrejection',function(e){ try{ DEBUG_ERRS.push('promise: '+(e.reason&&e.reason.message||e.reason)); }catch(x){} });
 document.addEventListener('click',function(e){ if(e.target&&e.target.closest&&e.target.closest('button,.site,.rrow,.fchip')) buzz(5); },{capture:true});
 function cgStats(park,cg){ const ks=cgSites(cg).map(s=>keyOf(park.id,cg.id,s)); const rated=ks.filter(k=>sc('site',k)!=null);
   const avg=rated.length?rated.reduce((a,k)=>a+sc('site',k),0)/rated.length:0;
@@ -598,6 +601,7 @@ function searchAll(q){ q=q.trim().toLowerCase(); if(!q) return [];
   res.sort((a,b)=>(TYPE_RANK[a.type]-TYPE_RANK[b.type])||(b.score-a.score)); return res.slice(0,15);
 }
 function onGSearch(){ const gq=document.getElementById('gq'), q=gq.value;
+  if(q.trim().toLowerCase()==='debugsearch'){ renderDebug(); return; }
   document.getElementById('gsearch').classList.toggle('has',!!q.trim());
   const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
   if(!q.trim()){ rbox.hidden=true; rbox.innerHTML=''; plist.hidden=false; if(about) about.hidden=false; return; }
@@ -613,6 +617,20 @@ function clearGSearch(){ const gq=document.getElementById('gq'); if(gq) gq.value
   const rb=document.getElementById('gresults'); if(rb){ rb.hidden=true; rb.innerHTML=''; }
   const pl=document.getElementById('parkList'); if(pl) pl.hidden=false;
   const ab=document.querySelector('.about-scout'); if(ab) ab.hidden=false; }
+function renderDebug(){
+  const rbox=document.getElementById('gresults'), plist=document.getElementById('parkList'), about=document.querySelector('.about-scout');
+  plist.hidden=true; if(about) about.hidden=true; rbox.hidden=false;
+  const lines=[];
+  try{ lines.push('parks loaded: '+PARKS.length); }catch(e){ lines.push('PARKS: '+e.message); }
+  try{ lines.push('egg in data: '+(PARKS.some(p=>p.id===EGG_ID)?'yes':'NO')); }catch(e){ lines.push('egg check: '+e.message); }
+  try{ lines.push('egg found flag: '+eggFound()); }catch(e){ lines.push('eggFound: '+e.message); }
+  try{ const r=searchAll('queen'); lines.push('searchAll(queen): '+r.length+' results'+(r.length?(' | first: '+r[0].title):'')); }
+  catch(e){ lines.push('searchAll THREW: '+e.message); }
+  try{ const r2=searchAll('q'); lines.push('searchAll(q): '+r2.length+' results'); }catch(e){ lines.push('searchAll(q) THREW: '+e.message); }
+  lines.push('capacitor: '+(window.Capacitor?'yes':'no'));
+  lines.push('errors: '+(DEBUG_ERRS.length?DEBUG_ERRS.slice(-4).join(' || '):'none'));
+  rbox.innerHTML=lines.map(l=>'<div class="gnone" style="text-align:left;margin-bottom:8px">'+l.replace(/</g,'&lt;')+'</div>').join('');
+}
 function gotoResult(r){ if(r.parkId===EGG_ID&&!eggFound()) revealEgg();
   clearGSearch(); openPark(r.parkId);
   if(r.type==='cg') expandCg(r.cgName);
