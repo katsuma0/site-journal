@@ -437,7 +437,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.163</button></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.164</button></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Photos and ratings are saved to this device only.</div>
   </div>
   <div class="wrap">
@@ -812,10 +812,6 @@ function plantDummy(){
   try{ const u=getUnlocks().filter(id=>D.themes.indexOf(id)<0); localStorage.setItem(UNLOCK_KEY,JSON.stringify(u)); }catch(e){}
   const ND={site:[],campground:[],trail:[],themes:[],pins:[]};
   const MK=[43.86,-79.34];
-  const NOTES=['Nice and shaded','Great view of the water','Too close to the comfort station','Slopes a bit at the back',
-    'Perfect for the trailer','Buggy in July','Book this one again','Huge site, very private','Neighbours can see everything',
-    'Nowhere decent for the hammock','Short walk to the beach','Road noise at night','Firewood drop nearby','Best sunset spot',
-    'Tight squeeze for the car','Would take this over anything nearby'];
   const skew=()=>{ const r=Math.random();
     if(r<0.02) return 0; if(r<0.06) return 1; if(r<0.15) return 2; if(r<0.35) return 3; if(r<0.75) return 4; return 5; };
   const shuffled=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
@@ -862,7 +858,7 @@ function plantDummy(){
     if(!state.campground[k]){ state.campground[k]={score:skew()}; ND.campground.push(k); ratedKeys.push(['campground',k]); duN++; perPark[p.id]=(perPark[p.id]||0)+1; } });
   /* notes, 5-50, only on entries we planted */
   let ntN=0; shuffled(ratedKeys).slice(0, 5+Math.floor(Math.random()*46)).forEach(bk=>{
-    const e=state[bk[0]][bk[1]]; if(e&&!e.note){ e.note=NOTES[Math.floor(Math.random()*NOTES.length)]; ntN++; } });
+    const e=state[bk[0]][bk[1]]; if(e&&!e.note){ ntN++; e.note='dummytext'+ntN; } });
   /* themes 5-50: rated parks first, then random fillers, never the egg */
   const themeTarget=5+Math.floor(Math.random()*46);
   const already=getUnlocks();
