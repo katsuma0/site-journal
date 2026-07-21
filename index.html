@@ -437,7 +437,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.161</button></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.162</button></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Photos and ratings are saved to this device only.</div>
   </div>
   <div class="wrap">
@@ -1092,11 +1092,14 @@ function renderParks(){ const box=document.getElementById('parkList'); box.inner
   else if(sortMode==='Top rated') cmp=(a,b)=>{ const x=SM[a.id],y=SM[b.id];
     const ax=x.rated?x.avg:-1, ay=y.rated?y.avg:-1; return (ay-ax)||dflt(a,b); };
   shown.sort((a,b)=>((isPinned(a.id)?0:1)-(isPinned(b.id)?0:1))||cmp(a,b));
-  const makeCard=p=>{ const st=SM[p.id]; const started=st.rated>0;
+  const makeCard=p=>{ const st=SM[p.id];
+    let started=st.rated>0, fracTxt=st.rated+'/'+st.total, pct=st.pct;
+    if(p.dayuse){ const pr=sc('campground',cidOf(p.id,p.name));
+      started=pr!=null; fracTxt='1/1'; pct=100; }
     const b=document.createElement('button'); b.className='park-card';
-    b.innerHTML=`${isPinned(p.id)?'<span class="pc-pinb"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 16v6" fill="none"/><path d="M9 3h6v4l2 5H7l2-5z"/></svg></span>':''}<div class="pc-top"><span class="pc-name">${p.name}</span>${started?`<span class="pc-pct tnum">${st.rated}/${st.total}</span>`:''}</div>
+    b.innerHTML=`${isPinned(p.id)?'<span class="pc-pinb"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 16v6" fill="none"/><path d="M9 3h6v4l2 5H7l2-5z"/></svg></span>':''}<div class="pc-top"><span class="pc-name">${p.name}</span>${started?`<span class="pc-pct tnum">${fracTxt}</span>`:''}</div>
       <div class="pc-meta">${metaLine(p,st)}</div>
-      ${started?`<div class="pc-bar"><i style="width:${st.pct}%"></i></div>`:''}`;
+      ${started?`<div class="pc-bar"><i style="width:${pct}%"></i></div>`:''}`;
     if(p.id===EGG_ID&&!eggFound()) b.classList.add('ghostpark');
     b.addEventListener('click',()=>openPark(p.id)); return b; };
   if(groupMode==='None'){ shown.forEach(p=>box.appendChild(makeCard(p))); return; }
