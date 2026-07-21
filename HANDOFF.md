@@ -9,7 +9,7 @@ Site Journal is a personal, phone-first web app for rating Ontario Provincial Pa
 
 The origin story matters and is in the app itself: a camper named **Laurie** and her husband at Grundy Lake (she introduced them to Bowser, the famous snapping turtle of Gurd Lake) inspired the whole thing. There is a hidden dedication to her (`forlaurie` in the search bar). Grundy Lake is the emotional home of the app; its theme is never changed.
 
-It is a single-file vanilla app: one `index.html` with all CSS and JS inline, park data embedded as JSON inside the page, no frameworks, no build step. It ships three ways: the GitHub Pages website (katsuma0.github.io/sitejournal), an installable PWA, and a native iOS app via Capacitor (`~/sitejournal-app` on Katsuma's Mac, run through Xcode). All ratings live on-device: localStorage for data, IndexedDB for photos. There is no server, no account, no analytics, and that is a feature — the footer promises "Ratings and photos are saved to this device only."
+It is a single-file vanilla app: one `index.html` with all CSS and JS inline, park data embedded as JSON inside the page, no frameworks, no build step. It ships three ways: the GitHub Pages website (katsuma0.github.io/sitejournal), an installable PWA, and a native iOS app via Capacitor (`~/Projects/sitejournal-ios` on Katsuma's Mac, run through Xcode). All ratings live on-device: localStorage for data, IndexedDB for photos. There is no server, no account, no analytics, and that is a feature — the footer promises "Ratings and photos are saved to this device only."
 
 ## 2. How Katsuma thinks about it (read this twice)
 
@@ -20,14 +20,14 @@ It is a single-file vanilla app: one `index.html` with all CSS and JS inline, pa
 - **He wants to be taught.** When something breaks, he appreciates the diagnosis explained plainly (the service worker saga, the flexbox compression bug). Explain causes, not just fixes.
 - **Motion should feel bubbly but subtle.** Small spring overshoots, press-scale on everything touchable, haptics on meaningful taps. Never enough bounce to expose an edge behind a page.
 
-## 3. Feature inventory (v0.178)
+## 3. Feature inventory (v0.179)
 
 **Home page:**
 - Eyebrow "ONTARIO PARKS", title "Site Journal", tappable version number (opens Versions sheet), one-line intro.
 - Global search: matches parks, campgrounds, sites ("Hemlock 112"), and trails, word-by-word with filler words ignored ("provincial", "park", "the"). Fixed 46×22 category bubbles: Park / Camp / Site / Trail.
 - Three filter chips, text-sized with adaptive labels: **Region filter** (six broad regions plus Pinned), **Sort** (Default A-to-Z, Progress, Top rated, Closest to GTA with a Departure sheet that re-centres drive times on any of ~109 Ontario towns; label degrades "From Markham" → "Markham" when space is tight), **Group by** (None, Letter in five balanced sections, Park type: Car camping / Day use / Backcountry, Region — the default, Rated-first).
 - Park cards: name, metadata line (region · sites · drive time when sorting by distance), rated fraction and progress bar once started, pin badge.
-- Footer: device-only disclaimer, "Created by Katsuma Onishi" linking to katsuma0.github.io, and "Reset all data" (two-tap arm-and-confirm).
+- Footer: device-only disclaimer, "Created by Katsuma Onishi" linking to katsuma0.github.io, "Export a backup" / "Import a backup" (whole journal as one JSON file: ratings, notes, photos, themes, settings; export goes through the iOS share sheet where available, falls back to a download; import validates the file and arms "Tap again to restore N ratings", then replaces this device's data and reloads), and "Reset all data" (two-tap arm-and-confirm).
 
 **Park pages:** slide in from the right; interactive swipe-back that follows the finger (rounded left edge, spring cancel, exit matches the back button). Order: Park rating card → Campgrounds (collapsible, with site-chip grids coloured by score) → Wishlist → Top sites → Stats (hidden until a site is rated; tiles, rating-spread bars in score colours, per-campground progress) → Trails → its own footer with per-park reset. About section per park: blurb, facility chips, fishing info, an FMZ pill linking to the sibling app (`https://katsuma0.github.io/on-fishing-reg/#zone=N`), official park page link.
 
@@ -67,7 +67,7 @@ It is a single-file vanilla app: one `index.html` with all CSS and JS inline, pa
 2. **Never rename storage keys:** `ontario-scout-v2` (main state), `site-journal-theme`, `site-journal-theme-vars`, `site-journal-unlocks`, `site-journal-sort`, `site-journal-group`, `site-journal-origin`, IndexedDB `scout-photos`.
 3. **The service worker must never register inside Capacitor** (`window.Capacitor` check). It once cache-first-served a stale index.html forever.
 4. **`refreshParksFromNetwork` returns immediately under Capacitor.** A stale `www/parks-data.json` once silently replaced 124 embedded parks with an old 123-park file. Embedded data is authoritative in the app.
-5. **Copy BOTH `index.html` and `parks-data.json` into `~/sitejournal-app/www/`** on every update, then `npx cap copy ios`.
+5. **Copy BOTH `index.html` and `parks-data.json` into `~/Projects/sitejournal-ios/www/`** on every update, then `npx cap copy ios`.
 6. **Verify a patch actually applied before bumping or committing.** We have shipped phantom commits when a script aborted mid-way. Never make a view a flex container (it broke auto-margin centring and compressed every page).
 7. Data changes go through the pipeline (`pipeline/build_db.py` → `export_to_app.py --all`) and get re-embedded minified into index.html.
 8. Secrets (egg, commands, themes) never appear in the Versions list.
@@ -75,8 +75,7 @@ It is a single-file vanilla app: one `index.html` with all CSS and JS inline, pa
 
 ## 7. Current state and open threads
 
-At **v0.178**, everything above is live. Open items, in the order Katsuma has cared about them:
-- **Ratings backup / export-import JSON** — the most important unbuilt feature. Real ratings live in the browser/PWA storage; the iOS app's container is separate. An export file is the bridge and the safety net.
+At **v0.179**, everything above is live. Ratings backup (export-import JSON, v0.179) is built: the backup file carries every storage key raw plus all photos, and restoring preserves the `_s5` migration marker so scores never re-migrate. Open items, in the order Katsuma has cared about them:
 - `color-scheme` wiring so the iOS scroll indicator (and keyboard) matches light pages and the one dark theme.
 - A subtle affordance that the title is tappable (About/Themes are otherwise invisible).
 - App Store Connect / TestFlight when he is ready; Info.plist already carries the camera ("Camera for sick flicks of the campsites.") and photo-library permission strings.
