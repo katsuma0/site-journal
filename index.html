@@ -436,6 +436,8 @@
   .park-card{transition:transform .14s ease}
   .park-card:active{transform:scale(.982)}
   .gsec:active{transform:scale(.985)}
+  .rank li .tr-rate{margin-left:auto}
+  .want-item .h .tr-rate{margin-left:auto;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -443,7 +445,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.166</button></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.167</button></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Photos and ratings are saved to this device only.</div>
   </div>
   <div class="wrap">
@@ -1395,13 +1397,13 @@ async function renderGlance(){ const p=curPark; if(!p) return;
   const wantSec=document.getElementById('wantSection'); if(wantSec) wantSec.hidden = wl.length===0;
   const topSec=document.getElementById('topSection'); if(topSec) topSec.hidden = rated.length===0;
   const wlBox=document.getElementById('wantList'); if(!wlBox) return;
-  wlBox.innerHTML=wl.length?wl.map(w=>`<div class="want-item" data-key="${w.k}"><div class="h"><span class="wstar">★</span><b>${w.cg.id}, Site ${w.s}</b>${(w.e.score!=null)?`<span class="val" style="background:${scoreColor(w.e.score)}">${w.e.score}/5</span>`:''}</div><p>${w.e.note&&w.e.note.trim()?w.e.note.replace(/</g,'&lt;'):''}</p><div class="want-thumbs" data-thumbs="${w.k}"></div></div>`).join('')
+  wlBox.innerHTML=wl.length?wl.map(w=>`<div class="want-item" data-key="${w.k}"><div class="h"><span class="wstar">★</span><b>${w.cg.id}, Site ${w.s}</b>${(w.e.score!=null)?`<span class="tr-rate rated" style="background:${scoreColor(w.e.score)}">${w.e.score}/5</span>`:''}</div><p>${w.e.note&&w.e.note.trim()?w.e.note.replace(/</g,'&lt;'):''}</p><div class="want-thumbs" data-thumbs="${w.k}"></div></div>`).join('')
     : `<div class="empty">Star sites with “Want this one” to build your booking shortlist.</div>`;
   wl.forEach(async w=>{ const t=wlBox.querySelector(`[data-thumbs="${CSS.escape(w.k)}"]`); if(!t) return; const ph=await getPhotos(w.k); t.innerHTML=ph.slice(0,6).map(x=>`<img src="${x.data}" alt="">`).join(''); });
   wlBox.querySelectorAll('.want-item').forEach(el=>el.addEventListener('click',(ev)=>{ if(ev.target.tagName!=='IMG'){ const parts=el.dataset.key.split('#'); openSheet('site',el.dataset.key,parts[1],parts.slice(2).join('#')); } }));
   const top=rated.sort((a,b)=>b.e.score-a.e.score).slice(0,5);
   const ts=document.getElementById('topSites');
-  ts.innerHTML=top.length?top.map(t=>`<li data-key="${t.k}"><span class="sw" style="background:${scoreColor(t.e.score)}">${t.s}</span><div><div class="who">Site ${t.s}</div><div class="whr">${t.cg.id}</div></div><span class="val" style="color:${scoreColor(t.e.score)}">${t.e.score}</span></li>`).join('')
+  ts.innerHTML=top.length?top.map(t=>`<li data-key="${t.k}"><div><div class="who">Site ${t.s}</div><div class="whr">${t.cg.id}</div></div><span class="tr-rate rated" style="background:${scoreColor(t.e.score)}">${t.e.score}/5</span></li>`).join('')
     : `<li class="empty">No sites rated yet.</li>`;
   ts.querySelectorAll('li[data-key]').forEach(li=>li.addEventListener('click',()=>{ const parts=li.dataset.key.split('#'); openSheet('site',li.dataset.key,parts[1],parts.slice(2).join('#')); })); }
 
