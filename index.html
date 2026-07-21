@@ -437,7 +437,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.158</button></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.159</button></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Photos and ratings are saved to this device only.</div>
   </div>
   <div class="wrap">
@@ -800,11 +800,10 @@ function plantHund(){
     const pk=cidOf(p.id,p.name); const pe=state.campground[pk]||(state.campground[pk]={}); pe.score=5; if(!pe.note) pe.note=pick(); parks++;
     (p.trails||[]).forEach(t=>{ const k=p.id+'#'+t.name; const te=state.trail[k]||(state.trail[k]={}); te.score=5; if(!te.note) te.note=pick(); trails++; });
   });
-  try{ localStorage.setItem(UNLOCK_KEY,JSON.stringify(PARK_THEMES.map(t=>t.id))); }catch(e){}
-  state.eggQE2=true;
+  try{ localStorage.setItem(UNLOCK_KEY,JSON.stringify(PARK_THEMES.map(t=>t.id).filter(id=>id!==EGG_ID))); }catch(e){}
   persist(); renderParks();
   showThemeToast('Everything maxed. A perfect season.');
-  return sites+' sites, '+cgs+' cgs, '+trails+' trails, '+parks+' parks, all themes, egg found';
+  return sites+' sites, '+cgs+' cgs, '+trails+' trails, '+parks+' parks, all themes';
 }
 function plantDummy(){
   /* clear the previous batch first so every press is a fresh randomization */
