@@ -372,7 +372,7 @@
 <section id="view-parks">
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.117 beta</span></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><span class="ver">v0.118 beta</span></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time.</div>
   </div>
   <div class="wrap">
@@ -513,7 +513,7 @@ function isPinned(pid){ return Array.isArray(state.pins)&&state.pins.indexOf(pid
 const EGG_ID='queenelizabethii';
 function eggFound(){ return !!state.eggQE2; }
 function parkVisible(p){ return p.id!==EGG_ID||eggFound(); }
-function revealEgg(){ if(eggFound()) return; state.eggQE2=true; persist(); buildSearchIndex(); renderParks(); buzz(12);
+function revealEgg(){ if(eggFound()) return; state.eggQE2=true; persist(); buildSearchIndex(); renderParks(); renderRegionRows(); buzz(12);
   showThemeToast('Hidden park revealed. Welcome to the Wildlands.'); }
 function togglePin(pid){ if(!Array.isArray(state.pins)) state.pins=[]; const i=state.pins.indexOf(pid); if(i>=0) state.pins.splice(i,1); else state.pins.push(pid); persist(); }
 let saveTimer=null;
@@ -568,11 +568,10 @@ function buildSearchIndex(){ SEARCH_CGS=[]; SEARCH_TRAILS=[];
     (p.trails||[]).forEach(t=>SEARCH_TRAILS.push({parkId:p.id,parkName:p.name,name:t.name,length:t.length,difficulty:t.difficulty})); }); }
 function nameHit(name,q,base){ name=name.toLowerCase(); return base+(name===q?12:0)+(name.startsWith(q)?6:0); }
 function searchAll(q){ q=q.trim().toLowerCase(); if(!q) return [];
-  if(!eggFound()&&q.indexOf('queen elizabeth')>=0) revealEgg();
   const toks=q.split(/\s+/).filter(Boolean);
   const siteTok=toks.filter(t=>/\d/.test(t)), nameTok=toks.filter(t=>!/\d/.test(t)), nameQ=nameTok.join(' ');
   const res=[];
-  if(nameQ && !siteTok.length) PARKS.forEach(p=>{ if(parkVisible(p)&&p.name.toLowerCase().includes(nameQ))
+  if(nameQ && !siteTok.length) PARKS.forEach(p=>{ if(p.name.toLowerCase().includes(nameQ))
     res.push({type:'park',score:nameHit(p.name,nameQ,60),parkId:p.id,title:p.name,sub:((p.region||'').split(' · ').slice(1).join(' · ')||p.region)}); });
   SEARCH_CGS.forEach(c=>{ const cgN=c.cgName.toLowerCase(), hay=(c.parkName+' '+c.cgName).toLowerCase();
     if(siteTok.length){ const nameOk=!nameQ||nameTok.every(t=>hay.includes(t)); if(!nameOk) return;
@@ -602,7 +601,8 @@ function clearGSearch(){ const gq=document.getElementById('gq'); if(gq) gq.value
   const rb=document.getElementById('gresults'); if(rb){ rb.hidden=true; rb.innerHTML=''; }
   const pl=document.getElementById('parkList'); if(pl) pl.hidden=false;
   const ab=document.querySelector('.about-scout'); if(ab) ab.hidden=false; }
-function gotoResult(r){ clearGSearch(); openPark(r.parkId);
+function gotoResult(r){ if(r.parkId===EGG_ID&&!eggFound()) revealEgg();
+  clearGSearch(); openPark(r.parkId);
   if(r.type==='cg') expandCg(r.cgName);
   else if(r.type==='site'){ expandCg(r.cgName); openSheet('site',keyOf(r.parkId,r.cgName,r.label),r.cgName,r.label); }
   else if(r.type==='trail'){ openSheet('trail',trailKey(r.trailName),r.trailName); } }
