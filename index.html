@@ -88,15 +88,17 @@
   #mapLayer iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   #mapLayer .mapfall{position:absolute;top:42%;width:100%;text-align:center;color:var(--moss);font-size:14px}
   #view-parks{position:relative}
-  body.mapdrag #view-parks{border-radius:16px 16px 0 0;background:var(--paper);
+  body.mapdrag #view-parks{position:relative;z-index:6;border-radius:16px 16px 0 0;background:var(--paper);
     box-shadow:0 -8px 40px rgba(19,32,25,.22);overflow:hidden}
-  body.mapdrag #view-parks .appbar,body.mapopen #view-parks .appbar{
-    padding-top:calc(28px + env(safe-area-inset-top))}
+  body.mapdrag #view-parks .appbar{padding-top:calc(28px + env(safe-area-inset-top))}
   body.mapopen{overflow:hidden}
+  /* the strip: grabber, eyebrow, title and version, breathing evenly above and below */
   body.mapopen #view-parks{position:fixed;left:0;right:0;top:0;height:100dvh;z-index:6;overflow:hidden;
-    transform:translateY(calc(100dvh - 104px));border-radius:16px 16px 0 0;
+    transform:translateY(calc(100dvh - 102px - env(safe-area-inset-bottom)));border-radius:16px 16px 0 0;
     background:var(--paper);box-shadow:0 -8px 40px rgba(19,32,25,.22);
     transition:transform .34s cubic-bezier(.32,1.22,.38,1)}
+  body.mapopen .mapbar{padding:10px 0 4px}
+  body.mapopen #view-parks .appbar{padding-top:24px}
   body.mapopen.mapclosing #view-parks{transform:translateY(0)}
 
   .backbar{position:sticky;top:0;z-index:20;background:var(--forest);color:var(--paper);
@@ -490,7 +492,7 @@
   </button>
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.183</button></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.184</button></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Ratings and photos are saved to this device only.</div>
   </div>
   <div class="wrap">
@@ -1682,7 +1684,7 @@ function applyTheme(id){
     var t=THEME_BY_ID[id], v=buildVars(t), tc=t.dark?t.paper:mixhex(t.primary,'#000000',.35);
     for(var k in v) d.style.setProperty(k,v[k]);
     if(meta) meta.setAttribute('content',tc);
-    try{ localStorage.setItem(THEME_KEY,id); localStorage.setItem(VARS_KEY,JSON.stringify({vars:v,tc:tc})); }catch(e){}
+    try{ localStorage.setItem(THEME_KEY,id); localStorage.setItem(VARS_KEY,JSON.stringify({vars:v,tc:tc,dark:!!t.dark})); }catch(e){}
   }
   document.querySelectorAll('.swatch').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.themeName===id)); });
 }
