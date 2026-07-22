@@ -80,26 +80,28 @@
      showing just the title. Tap or pull the strip up to come back. */
   .mapbar{display:none;position:absolute;top:0;left:0;right:0;z-index:2;
     flex-direction:column;align-items:center;background:none;border:none;cursor:pointer;
-    padding:calc(8px + env(safe-area-inset-top)) 0 6px;font-family:inherit;
-    -webkit-tap-highlight-color:transparent}
+    padding:8px 0 6px;font-family:inherit;-webkit-tap-highlight-color:transparent}
   .mapbar .mb{width:40px;height:4px;border-radius:99px;background:var(--mist-2)}
   body.mapdrag .mapbar,body.mapopen .mapbar{display:flex}
   #mapLayer{position:fixed;inset:0;z-index:4;background:var(--paper)}
   #mapLayer iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   #mapLayer .mapfall{position:absolute;top:42%;width:100%;text-align:center;color:var(--moss);font-size:14px}
   #view-parks{position:relative}
+  /* the page layout never changes between rest, drag and open, so nothing reflows
+     and the page slides as one crisp piece. Only the transform and the sheet
+     decoration change. */
   body.mapdrag #view-parks{position:relative;z-index:6;border-radius:16px 16px 0 0;background:var(--paper);
     box-shadow:0 -8px 40px rgba(19,32,25,.22);overflow:hidden}
-  body.mapdrag #view-parks .appbar{padding-top:calc(28px + env(safe-area-inset-top))}
   body.mapopen{overflow:hidden}
-  /* the strip: grabber, eyebrow, title and version, breathing evenly above and below */
   body.mapopen #view-parks{position:fixed;left:0;right:0;top:0;height:100dvh;z-index:6;overflow:hidden;
-    transform:translateY(calc(100dvh - 102px - env(safe-area-inset-bottom)));border-radius:16px 16px 0 0;
-    background:var(--paper);box-shadow:0 -8px 40px rgba(19,32,25,.22);
+    transform:translateY(calc(100dvh - 90px - env(safe-area-inset-bottom)));
+    border-radius:16px 16px 0 0;background:var(--paper);box-shadow:0 -8px 40px rgba(19,32,25,.22);
     transition:transform .34s cubic-bezier(.32,1.22,.38,1)}
-  body.mapopen .mapbar{padding:10px 0 4px}
-  body.mapopen #view-parks .appbar{padding-top:24px}
   body.mapopen.mapclosing #view-parks{transform:translateY(0)}
+  /* in the strip, slide the title block up over the notch padding with a transform
+     (no reflow), so the strip is tight and the margins even on any iPhone */
+  #view-parks .appbar{transition:transform .34s cubic-bezier(.32,1.22,.38,1)}
+  body.mapopen #view-parks .appbar{transform:translateY(calc(-1 * env(safe-area-inset-top)))}
 
   .backbar{position:sticky;top:0;z-index:20;background:var(--forest);color:var(--paper);
     padding:calc(11px + env(safe-area-inset-top)) 18px 11px}
@@ -492,7 +494,7 @@
   </button>
   <div class="appbar">
     <div class="eyebrow">Ontario Parks</div>
-    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.184</button></div>
+    <div class="titlebar"><h1 id="appTitle" style="cursor:pointer;-webkit-tap-highlight-color:transparent">Site Journal</h1><button class="ver" id="verBtn">v0.185</button></div>
     <div class="sub">Pick a park, open its campgrounds, and go for a nice walk around the sites. Rate them and note which you'd book next time. Ratings and photos are saved to this device only.</div>
   </div>
   <div class="wrap">
@@ -671,6 +673,7 @@ const KEY='ontario-scout-v2';
 /* inside the iOS app the fishing half ships bundled at fishing/, so every link stays in the app */
 const IN_APP=!!window.Capacitor||location.protocol==='capacitor:';
 const FISHREG_BASE=IN_APP?'fishing/index.html':'https://katsuma0.github.io/on-fishing-reg/';
+try{ history.scrollRestoration='manual'; }catch(e){} /* every open starts at the top */
 function load(){ try{ const v=localStorage.getItem(KEY); if(v) state=Object.assign({site:{},campground:{},trail:{}},JSON.parse(v)); }catch(e){}
   if(!Array.isArray(state.pins)) state.pins=[]; }
 function isPinned(pid){ return Array.isArray(state.pins)&&state.pins.indexOf(pid)>=0; }
@@ -1228,10 +1231,8 @@ function goHome(){ const vp=document.getElementById('view-park');
     vh.classList.remove('view-anim'); void vh.offsetWidth; vh.classList.add('view-anim');
     clearGSearch(); renderParks(); window.scrollTo(0,homeScrollY); if(window.parkResetSync) parkResetSync(); },150); }
 document.getElementById('backBtn').addEventListener('click',function(){
-  const vp=document.getElementById('view-park');
-  vp.classList.remove('view-anim');
-  vp.style.transition='transform .26s cubic-bezier(.32,.72,.35,1)'; vp.style.transform='translateX(100%)';
-  setTimeout(function(){ vp.style.transition=''; vp.style.transform=''; goHome(); },250); });
+  /* one clean slide, the same the swipe uses; never the double animation */
+  if(window.sjExitPark){ window.sjExitPark(); } else { goHome(); } });
 (function(){
   const rb=document.getElementById('resetBtn');
   if(rb){ let armed=false, t=null;
@@ -1242,6 +1243,9 @@ document.getElementById('backBtn').addEventListener('click',function(){
       try{ localStorage.removeItem(KEY); }catch(e){}
       ['site-journal-theme','site-journal-theme-vars','site-journal-unlocks','site-journal-sort','site-journal-origin'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
       try{ indexedDB.deleteDatabase('scout-photos'); }catch(e){}
+      /* land back at the very top, exactly like a fresh open */
+      try{ history.scrollRestoration='manual'; }catch(e){}
+      homeScrollY=0; window.scrollTo(0,0);
       setTimeout(function(){ location.reload(); },200); }); }
   const pb=document.getElementById('resetBtnPark');
   if(pb){ let armed=false, t=null;
@@ -1314,6 +1318,12 @@ document.getElementById('backBtn').addEventListener('click',function(){
     vp.style.transition='transform .26s cubic-bezier(.32,.72,.35,1)'; vp.style.transform='translateX(105%)';
     setTimeout(function(){ vp.style.transition=''; vp.style.transform=''; vp.style.top=''; vp.classList.remove('dragback'); vp.hidden=true;
       clearGSearch(); renderParks(); window.scrollTo(0,homeScrollY); if(window.parkResetSync) parkResetSync(); },190); }
+  /* the back button uses this same single slide, so it never animates twice */
+  window.sjExitPark=function(){ if(vp.hidden) return;
+    prep();
+    vp.style.transition='none'; vp.style.transform='translateX(0)';
+    void vp.offsetWidth;   /* commit the start frame so the slide always animates */
+    complete(); };
   vp.addEventListener('touchstart',function(e){ if(e.touches.length!==1) return;
     sx=e.touches[0].clientX; sy=e.touches[0].clientY; lastX=sx; lastT=Date.now(); vel=0; dx=0; deciding=true; dragging=false; },{passive:true});
   vp.addEventListener('touchmove',function(e){ if(!deciding&&!dragging) return;
